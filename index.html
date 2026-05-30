@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>JOBZ.BAR · TOIT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --o:#FF6900;--g:#39FF14;--c:#00E5FF;--w:#fff;
+  --bg:#060606;--bg2:#0d0d0d;--bg3:#111;
+  --border:#1e1e1e;--muted:#444;
+  --fh:'Orbitron',sans-serif;--fb:'JetBrains Mono',monospace;
+}
+html,body{min-height:100%;background:var(--bg);color:#ccc;font-family:var(--fb);overscroll-behavior:none}
+body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
+
+/* ── COMMON ── */
+.screen{width:100%;max-width:480px;min-height:100svh;display:flex;flex-direction:column;padding:0;position:relative;overflow:hidden}
+.screen.hidden{display:none}
+.logo-bar{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border)}
+.logo-txt{font-family:var(--fh);font-size:1.1rem;font-weight:900;color:#fff;letter-spacing:1px}
+.logo-txt span{color:var(--o)}
+.venue-tag{font-size:.6rem;letter-spacing:3px;color:var(--o);background:rgba(255,105,0,.1);border:1px solid rgba(255,105,0,.25);padding:.25rem .75rem;border-radius:2px}
+.body-pad{padding:1.5rem}
+.label{font-size:.6rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:.5rem;display:block}
+.inp{width:100%;background:var(--bg2);border:1px solid var(--border);color:#fff;font-family:var(--fb);font-size:.9rem;padding:.85rem 1rem;border-radius:4px;outline:none;transition:border .2s}
+.inp:focus{border-color:rgba(255,105,0,.5)}
+.inp::placeholder{color:#333}
+.inp-grp{margin-bottom:1.25rem}
+.btn-primary{width:100%;background:var(--o);color:#000;font-family:var(--fh);font-size:.75rem;font-weight:700;letter-spacing:2px;padding:1rem;border:none;border-radius:4px;cursor:pointer;transition:opacity .2s,transform .1s}
+.btn-primary:active{transform:scale(.98);opacity:.9}
+.btn-secondary{width:100%;background:transparent;color:var(--c);font-family:var(--fh);font-size:.65rem;font-weight:700;letter-spacing:2px;padding:.85rem;border:1px solid rgba(0,229,255,.3);border-radius:4px;cursor:pointer;transition:background .2s}
+.btn-secondary:hover{background:rgba(0,229,255,.05)}
+.section-title{font-family:var(--fh);font-size:.65rem;font-weight:700;color:var(--c);letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.err-msg{font-size:.7rem;color:#c44;margin-top:.35rem;display:none}
+.err-msg.show{display:block}
+
+/* ── SCAN ENTRY ── */
+#s-scan{justify-content:space-between}
+.scan-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem;position:relative}
+.scan-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 80%,rgba(255,105,0,.08),transparent);pointer-events:none}
+.scan-big{font-family:var(--fh);font-size:2.8rem;font-weight:900;color:#fff;text-align:center;line-height:1}
+.scan-big span{color:var(--o)}
+.scan-sub{font-size:.7rem;color:#444;letter-spacing:2px;text-align:center;margin-top:.5rem}
+.scan-divider{width:48px;height:2px;background:var(--o);margin:1.5rem auto}
+.live-ticker{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:.6rem 1.5rem;overflow:hidden;white-space:nowrap;position:relative}
+.live-ticker::before{content:'';position:absolute;left:0;top:0;bottom:0;width:48px;background:linear-gradient(90deg,var(--bg),transparent);z-index:1}
+.ticker-inner{display:inline-block;animation:ticker 28s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.ticker-inner span{font-size:.65rem;color:#555;margin-right:3rem}
+.ticker-inner span b{color:var(--o);font-weight:400}
+.scan-footer{padding:1.25rem 1.5rem}
+.live-dot{display:inline-block;width:6px;height:6px;background:var(--g);border-radius:50%;margin-right:.5rem;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.live-count{font-size:.7rem;color:#555;margin-bottom:1rem;display:flex;align-items:center}
+.live-count strong{color:#888;margin:0 .25rem}
+
+/* ── REGISTRATION ── */
+.back-btn{background:none;border:none;color:var(--muted);font-family:var(--fb);font-size:.7rem;cursor:pointer;padding:.5rem 0;letter-spacing:1px;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
+.back-btn:hover{color:#fff}
+.step-indicator{display:flex;gap:.5rem;margin-bottom:2rem}
+.step-dot{height:3px;flex:1;background:var(--border);border-radius:2px;transition:background .3s}
+.step-dot.active{background:var(--o)}
+.step-dot.done{background:#333}
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.25rem}
+.who-btn{background:var(--bg2);border:1px solid var(--border);color:#666;font-family:var(--fb);font-size:.72rem;padding:.75rem .5rem;border-radius:4px;cursor:pointer;text-align:center;transition:all .2s}
+.who-btn.sel{background:rgba(255,105,0,.12);border-color:rgba(255,105,0,.5);color:var(--o)}
+.who-btn .emoji{font-size:1.1rem;display:block;margin-bottom:.3rem}
+.scene-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:1.25rem}
+.scene-btn{background:var(--bg2);border:1px solid var(--border);color:#555;font-family:var(--fb);font-size:.65rem;padding:.6rem .4rem;border-radius:4px;cursor:pointer;text-align:center;transition:all .2s;line-height:1.3}
+.scene-btn .emoji{font-size:1rem;display:block;margin-bottom:.25rem}
+.scene-btn.sel{background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.4);color:var(--c)}
+
+/* ── OTP SCREEN ── */
+.otp-disp{font-family:var(--fh);font-size:1.8rem;letter-spacing:8px;color:var(--o);text-align:center;padding:1.25rem;background:rgba(255,105,0,.07);border:1px solid rgba(255,105,0,.2);border-radius:4px;margin-bottom:1.5rem}
+.otp-hint{font-size:.7rem;color:#444;text-align:center;margin-bottom:1.5rem}
+.otp-inp-row{display:flex;gap:.5rem;justify-content:center;margin-bottom:1.5rem}
+.otp-char{width:44px;height:52px;background:var(--bg2);border:1px solid var(--border);color:#fff;font-family:var(--fh);font-size:1.2rem;text-align:center;border-radius:4px;outline:none;transition:border .2s}
+.otp-char:focus{border-color:var(--o)}
+
+/* ── DASHBOARD ── */
+#s-dash{background:var(--bg)}
+.dash-hud{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.hud-venue{font-family:var(--fh);font-size:.55rem;color:var(--o);letter-spacing:3px}
+.hud-user{font-size:.65rem;color:#555;display:flex;align-items:center;gap:.4rem}
+.hud-badge{background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2);color:var(--c);font-size:.55rem;letter-spacing:2px;padding:.2rem .5rem;border-radius:2px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.stat-cell{background:var(--bg2);padding:.85rem;text-align:center}
+.stat-cell .n{font-family:var(--fh);font-size:1.3rem;font-weight:700;color:#fff}
+.stat-cell.green .n{color:var(--g)}
+.stat-cell.orange .n{color:var(--o)}
+.stat-cell.cyan .n{color:var(--c)}
+.stat-cell .l{font-size:.55rem;color:#444;letter-spacing:2px;text-transform:uppercase;margin-top:.25rem}
+.dash-body{padding:1.25rem 1.5rem;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.scene-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);color:var(--c);font-size:.6rem;letter-spacing:2px;padding:.35rem .75rem;border-radius:20px;margin-bottom:1.25rem}
+.member-list{display:flex;flex-direction:column;gap:.6rem}
+.member-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.9rem 1rem;display:flex;align-items:center;gap:.85rem;transition:border .2s}
+.member-card:hover{border-color:#2a2a2a}
+.avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:.7rem;font-weight:700;flex-shrink:0}
+.member-info{flex:1;min-width:0}
+.member-name{font-size:.8rem;color:#ccc;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.member-role{font-size:.65rem;color:#555;margin-top:.15rem}
+.member-meta{display:flex;align-items:center;gap:.35rem;margin-top:.3rem;flex-wrap:wrap}
+.meta-chip{font-size:.55rem;padding:.2rem .5rem;border-radius:2px;letter-spacing:1px}
+.mc-o{background:rgba(255,105,0,.1);color:var(--o);border:1px solid rgba(255,105,0,.2)}
+.mc-c{background:rgba(0,229,255,.08);color:var(--c);border:1px solid rgba(0,229,255,.2)}
+.mc-g{background:rgba(57,255,20,.07);color:var(--g);border:1px solid rgba(57,255,20,.2)}
+.connect-btn{background:transparent;border:1px solid rgba(255,105,0,.3);color:var(--o);font-family:var(--fb);font-size:.6rem;letter-spacing:1px;padding:.4rem .75rem;border-radius:3px;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.connect-btn:hover{background:rgba(255,105,0,.1)}
+.connect-btn.done{border-color:rgba(57,255,20,.3);color:var(--g);cursor:default}
+.feed-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.25rem}
+.feed-item{font-size:.7rem;color:#444;padding:.5rem 0;border-bottom:1px solid #111;display:flex;align-items:flex-start;gap:.5rem;line-height:1.4}
+.feed-dot{width:5px;height:5px;border-radius:50%;background:var(--o);margin-top:.4rem;flex-shrink:0}
+.feed-item b{color:#666;font-weight:400}
+.dash-footer{background:var(--bg2);border-top:1px solid var(--border);padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.footer-note{font-size:.6rem;color:#333;letter-spacing:1px;text-align:center}
+
+/* ── MODAL OVERLAY ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-bg.show{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:400px;padding:2rem;position:relative}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.25rem;line-height:1}
+.modal-title{font-family:var(--fh);font-size:.8rem;color:#fff;letter-spacing:2px;margin-bottom:1.5rem;text-align:center}
+.progress-steps{display:flex;flex-direction:column;gap:.75rem}
+.prog-step{display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:#444;transition:color .4s}
+.prog-step.active{color:#ccc}
+.prog-step.done{color:var(--g)}
+.prog-icon{width:20px;height:20px;border-radius:50%;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;transition:all .4s}
+.prog-step.active .prog-icon{border-color:var(--o);color:var(--o);animation:spin 1s linear infinite}
+.prog-step.done .prog-icon{border-color:var(--g);color:var(--g)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal-success{text-align:center;padding:1rem 0;display:none}
+.modal-success .check{font-family:var(--fh);font-size:2rem;color:var(--g);margin-bottom:.75rem}
+.modal-success p{font-size:.8rem;color:#ccc;line-height:1.6}
+
+/* ── CONNECTING ANIM ── */
+.scan-ring{width:80px;height:80px;border-radius:50%;border:2px solid transparent;border-top-color:var(--o);animation:spin 1.2s linear infinite;margin:1.5rem auto}
+
+/* ── RESPONSIVE ── */
+@media(max-width:380px){
+  .scan-big{font-size:2.2rem}
+  .who-grid{grid-template-columns:1fr 1fr}
+  .scene-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SCREEN 0: VENUE LANDING ═══════════ -->
+<div id="s-scan" class="screen">
+  <div class="logo-bar">
+    <div class="logo-txt">JOBZ<span>.BAR</span></div>
+    <div class="venue-tag" id="venue-label">TOIT · INDIRANAGAR</div>
+  </div>
+
+  <div class="live-ticker">
+    <div class="ticker-inner">
+      <span>Arjun checked in · <b>Startup</b></span>
+      <span>Priya is looking for <b>Travel buddies</b></span>
+      <span>3 new <b>Entrepreneurs</b> just joined</span>
+      <span>Vikram connected with <b>2 new people</b></span>
+      <span>Deepa is here for <b>Investment</b> conversations</span>
+      <span>Rohan posted a <b>CTO role</b> · Bengaluru</span>
+      <span>Naina just joined · <b>Creator</b></span>
+    </div>
+  </div>
+
+  <div class="scan-hero">
+    <div class="scan-big">JOBZ<span>.BAR</span></div>
+    <div class="scan-sub">VERIFIED HUMANS · REAL VENUES</div>
+    <div class="scan-divider"></div>
+    <div class="live-count"><span class="live-dot"></span> <strong id="live-n">47</strong>&nbsp;professionals checked in tonight</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-top:1rem">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.75rem;text-align:center">
+        <div style="font-family:var(--fh);font-size:1rem;color:var(--o)" id="count-ent">14</div>
+        <div style="font-size:.55rem;color:#444;letter-spacing:2px;margin-top:.2rem">FOUNDERS</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.75rem;text-align:center">
+        <div style="font-family:var(--fh);font-size:1rem;color:var(--c)" id="count-emp">22</div>
+        <div style="font-size:.55rem;color:#444;letter-spacing:2px;margin-top:.2rem">EMPLOYEES</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.75rem;text-align:center">
+        <div style="font-family:var(--fh);font-size:1rem;color:var(--g)" id="count-inv">11</div>
+        <div style="font-size:.55rem;color:#444;letter-spacing:2px;margin-top:.2rem">INVESTORS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scan-footer">
+    <button class="btn-primary" onclick="goto('s-reg1')">JOIN TONIGHT'S ROOM</button>
+    <p style="font-size:.6rem;color:#333;text-align:center;margin-top:.75rem;letter-spacing:1px">FREE · NO APP DOWNLOAD · 60 SECONDS</p>
+  </div>
+</div>
+
+<!-- ═══════════ SCREEN 1: BASIC INFO ═══════════ -->
+<div id="s-reg1" class="screen hidden">
+  <div class="logo-bar">
+    <div class="logo-txt">JOBZ<span>.BAR</span></div>
+    <div class="venue-tag" id="venue-label2">TOIT</div>
+  </div>
+  <div class="body-pad" style="flex:1;overflow-y:auto">
+    <button class="back-btn" onclick="goto('s-scan')">← BACK</button>
+    <div class="step-indicator">
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+      <div class="step-dot"></div>
+    </div>
+    <div class="section-title">YOUR IDENTITY</div>
+
+    <div class="inp-grp">
+      <span class="label">Full Name</span>
+      <input class="inp" id="reg-name" type="text" placeholder="Rahul Sharma" autocomplete="name"/>
+      <div class="err-msg" id="err-name">Enter your name</div>
+    </div>
+    <div class="inp-grp">
+      <span class="label">Mobile Number</span>
+      <input class="inp" id="reg-phone" type="tel" placeholder="98xxxxxxxx" maxlength="10"/>
+      <div class="err-msg" id="err-phone">Enter 10-digit mobile</div>
+    </div>
+    <div class="inp-grp">
+      <span class="label">Email</span>
+      <input class="inp" id="reg-email" type="email" placeholder="you@example.com"/>
+      <div class="err-msg" id="err-email">Enter valid email</div>
+    </div>
+  </div>
+  <div style="padding:1.25rem 1.5rem">
+    <button class="btn-primary" onclick="validateReg1()">CONTINUE →</button>
+  </div>
+</div>
+
+<!-- ═══════════ SCREEN 2: OTP ═══════════ -->
+<div id="s-otp" class="screen hidden">
+  <div class="logo-bar">
+    <div class="logo-txt">JOBZ<span>.BAR</span></div>
+    <div class="venue-tag">VERIFY</div>
+  </div>
+  <div class="body-pad" style="flex:1;overflow-y:auto">
+    <button class="back-btn" onclick="goto('s-reg1')">← BACK</button>
+    <div class="step-indicator">
+      <div class="step-dot done"></div>
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+    </div>
+    <div class="section-title">OTP VERIFICATION</div>
+    <p style="font-size:.75rem;color:#555;margin-bottom:1.5rem;line-height:1.6">OTP sent to <span id="otp-phone-disp" style="color:#aaa"></span></p>
+    <div class="otp-inp-row">
+      <input class="otp-char" id="o1" maxlength="1" type="number" inputmode="numeric"/>
+      <input class="otp-char" id="o2" maxlength="1" type="number" inputmode="numeric"/>
+      <input class="otp-char" id="o3" maxlength="1" type="number" inputmode="numeric"/>
+      <input class="otp-char" id="o4" maxlength="1" type="number" inputmode="numeric"/>
+    </div>
+    <div class="otp-hint" id="otp-demo-hint" style="color:var(--o)">DEMO MODE · OTP is 1234</div>
+    <div class="err-msg" id="err-otp">Incorrect OTP. Try again.</div>
+  </div>
+  <div style="padding:1.25rem 1.5rem">
+    <button class="btn-primary" onclick="verifyOTP()">VERIFY OTP</button>
+    <button class="btn-secondary" style="margin-top:.5rem" onclick="resendOTP()">RESEND OTP</button>
+  </div>
+</div>
+
+<!-- ═══════════ SCREEN 3: WHO + SCENE ═══════════ -->
+<div id="s-reg2" class="screen hidden">
+  <div class="logo-bar">
+    <div class="logo-txt">JOBZ<span>.BAR</span></div>
+    <div class="venue-tag">PROFILE</div>
+  </div>
+  <div class="body-pad" style="flex:1;overflow-y:auto">
+    <button class="back-btn" onclick="goto('s-otp')">← BACK</button>
+    <div class="step-indicator">
+      <div class="step-dot done"></div>
+      <div class="step-dot done"></div>
+      <div class="step-dot active"></div>
+    </div>
+    <div class="section-title" style="margin-bottom:.75rem">WHO ARE YOU?</div>
+    <div class="who-grid" id="who-grid">
+      <button class="who-btn" data-val="Entrepreneur" onclick="selWho(this)"><span class="emoji">🚀</span>Entrepreneur</button>
+      <button class="who-btn" data-val="Employee" onclick="selWho(this)"><span class="emoji">💼</span>Employee</button>
+      <button class="who-btn" data-val="Freelancer" onclick="selWho(this)"><span class="emoji">💻</span>Freelancer</button>
+      <button class="who-btn" data-val="Investor" onclick="selWho(this)"><span class="emoji">💰</span>Investor</button>
+      <button class="who-btn" data-val="Student" onclick="selWho(this)"><span class="emoji">🎓</span>Student</button>
+      <button class="who-btn" data-val="Creator" onclick="selWho(this)"><span class="emoji">🎨</span>Creator</button>
+    </div>
+    <div class="err-msg" id="err-who" style="margin-bottom:.75rem">Select who you are</div>
+
+    <div class="section-title" style="margin-bottom:.75rem;margin-top:.25rem">WHAT'S YOUR SCENE TONIGHT?</div>
+    <div class="scene-grid" id="scene-grid">
+      <button class="scene-btn" data-val="Business" onclick="selScene(this)"><span class="emoji">🤝</span>Business</button>
+      <button class="scene-btn" data-val="Startups" onclick="selScene(this)"><span class="emoji">🚀</span>Startups</button>
+      <button class="scene-btn" data-val="Investment" onclick="selScene(this)"><span class="emoji">📈</span>Investment</button>
+      <button class="scene-btn" data-val="Technology" onclick="selScene(this)"><span class="emoji">⚡</span>Technology</button>
+      <button class="scene-btn" data-val="Travel" onclick="selScene(this)"><span class="emoji">✈️</span>Travel</button>
+      <button class="scene-btn" data-val="Food" onclick="selScene(this)"><span class="emoji">🍔</span>Food</button>
+      <button class="scene-btn" data-val="Music" onclick="selScene(this)"><span class="emoji">🎵</span>Music</button>
+      <button class="scene-btn" data-val="Sports" onclick="selScene(this)"><span class="emoji">🏏</span>Sports</button>
+      <button class="scene-btn" data-val="Open Table" onclick="selScene(this)"><span class="emoji">🪑</span>Open Table</button>
+    </div>
+    <div class="err-msg" id="err-scene" style="margin-bottom:.75rem">Select your scene</div>
+  </div>
+  <div style="padding:1.25rem 1.5rem">
+    <button class="btn-primary" onclick="enterDash()">ENTER THE ROOM →</button>
+  </div>
+</div>
+
+<!-- ═══════════ SCREEN 4: CONNECTING ANIM ═══════════ -->
+<div id="s-connect" class="screen hidden" style="align-items:center;justify-content:center">
+  <div class="scan-ring"></div>
+  <div style="font-family:var(--fh);font-size:.7rem;color:var(--o);letter-spacing:3px;text-align:center" id="conn-msg">SCANNING VENUE</div>
+  <p style="font-size:.65rem;color:#333;margin-top:.75rem;letter-spacing:2px">VERIFYING IDENTITY</p>
+</div>
+
+<!-- ═══════════ SCREEN 5: DASHBOARD ═══════════ -->
+<div id="s-dash" class="screen hidden">
+  <div class="dash-hud">
+    <div>
+      <div class="hud-venue" id="hud-venue-name">TOIT · INDIRANAGAR · LIVE</div>
+      <div style="font-size:.8rem;color:#ccc;margin-top:.2rem;font-family:var(--fh)" id="hud-user-name">—</div>
+    </div>
+    <div class="hud-badge" id="hud-scene-badge">—</div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-cell orange">
+      <div class="n" id="d-total">48</div><div class="l">In Room</div>
+    </div>
+    <div class="stat-cell cyan">
+      <div class="n" id="d-conns">0</div><div class="l">Connections</div>
+    </div>
+    <div class="stat-cell green">
+      <div class="n" id="d-scene-count">—</div><div class="l">Same Scene</div>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <!-- SCENE FILTER -->
+    <div class="scene-badge" id="my-scene-badge">
+      <span id="sb-emoji">🤝</span>&nbsp;<span id="sb-label">YOUR SCENE</span>
+    </div>
+
+    <!-- MEMBERS IN ROOM -->
+    <div class="section-title">WHO'S HERE NOW</div>
+    <div class="member-list" id="member-list"></div>
+
+    <!-- LIVE FEED -->
+    <div class="section-title" style="margin-top:1.5rem">LIVE ACTIVITY</div>
+    <div class="feed-list" id="feed-list"></div>
+  </div>
+
+  <div class="dash-footer">
+    <div class="footer-note">
+      <span class="live-dot"></span> SESSION ACTIVE · ENDS WHEN YOU LEAVE
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ CONNECT MODAL ═══════════ -->
+<div class="modal-bg" id="conn-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title">ESTABLISHING CONNECTION</div>
+    <div class="progress-steps" id="modal-steps">
+      <div class="prog-step" id="ps1"><div class="prog-icon">◌</div><span>Scanning member profile</span></div>
+      <div class="prog-step" id="ps2"><div class="prog-icon">◌</div><span>Verifying co-presence</span></div>
+      <div class="prog-step" id="ps3"><div class="prog-icon">◌</div><span>Creating connection</span></div>
+      <div class="prog-step" id="ps4"><div class="prog-icon">◌</div><span>Updating live network</span></div>
+    </div>
+    <div class="modal-success" id="modal-success">
+      <div class="check">✓</div>
+      <div style="font-family:var(--fh);font-size:.9rem;color:var(--g);letter-spacing:2px;margin-bottom:.5rem">CONNECTION VERIFIED</div>
+      <p id="modal-success-name"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const VENUE_CONFIG = {
+  name: 'TOIT',
+  location: 'INDIRANAGAR',
+  city: 'BENGALURU',
+  slug: 'TOIT'
+};
+
+// Read slug from URL: jobz.bar/toit
+(function(){
+  const path = window.location.pathname.replace('/','').toUpperCase();
+  if(path && path.length > 0){
+    VENUE_CONFIG.slug = path;
+    VENUE_CONFIG.name = path;
+  }
+  document.getElementById('venue-label').textContent = VENUE_CONFIG.name + ' · ' + VENUE_CONFIG.location;
+  document.getElementById('venue-label2').textContent = VENUE_CONFIG.name;
+  document.getElementById('hud-venue-name').textContent = VENUE_CONFIG.name + ' · ' + VENUE_CONFIG.location + ' · LIVE';
+})();
+
+// ── STATE ──
+const S = {
+  name:'', phone:'', email:'', who:'', scene:'', connections:0,
+  members:[], feedItems:[], liveCount:47
+};
+
+// ── NAVIGATION ──
+function goto(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+// ── LIVE COUNTER ANIMATION ──
+function animCount(){
+  const el = document.getElementById('live-n');
+  const target = S.liveCount;
+  let c = parseInt(el.textContent);
+  const step = ()=>{
+    if(c<target){c++;el.textContent=c;setTimeout(step,40)}
+  };
+  step();
+}
+setInterval(()=>{
+  const delta = Math.random()<.6?1:-1;
+  S.liveCount = Math.max(30,Math.min(80,S.liveCount+delta));
+  animCount();
+  updateDashStats();
+},4500);
+
+// ── REG STEP 1 VALIDATION ──
+function validateReg1(){
+  let ok=true;
+  const name=document.getElementById('reg-name').value.trim();
+  const phone=document.getElementById('reg-phone').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const showErr=(id,msg,show)=>{const el=document.getElementById(id);el.textContent=msg;el.classList.toggle('show',show)};
+  if(!name){showErr('err-name','Enter your full name',true);ok=false}else showErr('err-name','',false);
+  if(!/^\d{10}$/.test(phone)){showErr('err-phone','Enter valid 10-digit number',true);ok=false}else showErr('err-phone','',false);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('err-email','Enter valid email',true);ok=false}else showErr('err-email','',false);
+  if(!ok)return;
+  S.name=name;S.phone=phone;S.email=email;
+  document.getElementById('otp-phone-disp').textContent='+91 '+phone;
+  goto('s-otp');
+}
+
+// ── OTP HANDLING ──
+document.querySelectorAll('.otp-char').forEach((inp,i,arr)=>{
+  inp.addEventListener('input',()=>{
+    inp.value=inp.value.replace(/\D/g,'').slice(-1);
+    if(inp.value&&i<arr.length-1)arr[i+1].focus();
+  });
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Backspace'&&!inp.value&&i>0)arr[i-1].focus();
+  });
+});
+function verifyOTP(){
+  const otp=['o1','o2','o3','o4'].map(id=>document.getElementById(id).value).join('');
+  if(otp==='1234'){
+    document.getElementById('err-otp').classList.remove('show');
+    goto('s-reg2');
+  } else {
+    document.getElementById('err-otp').classList.add('show');
+    ['o1','o2','o3','o4'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('o1').focus();
+  }
+}
+function resendOTP(){
+  ['o1','o2','o3','o4'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('o1').focus();
+  document.getElementById('otp-demo-hint').textContent='OTP resent · DEMO MODE · use 1234';
+}
+
+// ── WHO + SCENE ──
+let selWhoVal='', selSceneVal='';
+function selWho(btn){
+  document.querySelectorAll('.who-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');selWhoVal=btn.dataset.val;
+}
+function selScene(btn){
+  document.querySelectorAll('.scene-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');selSceneVal=btn.dataset.val;
+}
+
+// ── ENTER DASHBOARD ──
+function enterDash(){
+  if(!selWhoVal){document.getElementById('err-who').classList.add('show');return}
+  document.getElementById('err-who').classList.remove('show');
+  if(!selSceneVal){document.getElementById('err-scene').classList.add('show');return}
+  document.getElementById('err-scene').classList.remove('show');
+  S.who=selWhoVal;S.scene=selSceneVal;
+  goto('s-connect');
+  runConnectAnim(()=>{
+    buildDashboard();
+    goto('s-dash');
+  });
+}
+
+const CONN_MSGS=['SCANNING VENUE','VERIFYING IDENTITY','JOINING NETWORK','ACTIVATING SESSION'];
+function runConnectAnim(cb){
+  let i=0;
+  const el=document.getElementById('conn-msg');
+  const iv=setInterval(()=>{
+    el.textContent=CONN_MSGS[i]||CONN_MSGS[3];
+    i++;
+    if(i>=CONN_MSGS.length){clearInterval(iv);setTimeout(cb,400)}
+  },600);
+}
+
+// ── MEMBER DATA ──
+const NAMES=['Arjun Mehta','Priya Nair','Vikram Rao','Deepa Krishnan','Rohan Gupta','Naina Singh','Aditya Kumar','Sneha Patel','Kiran Reddy','Ananya Bose','Rahul Joshi','Pooja Iyer','Suresh Varma','Meera Das','Dinesh Chetty','Kavya Shah','Nikhil Pandey','Ritu Agarwal','Siddharth Menon','Lakshmi Nambiar'];
+const ROLES=['Founder, AI Startup','Product Manager','Software Engineer','Venture Partner','Marketing Lead','UX Designer','Backend Engineer','Sales Director','Angel Investor','Content Creator','DevOps Lead','Business Analyst','CTO','Data Scientist','Growth Hacker','Brand Strategist','Fullstack Dev','Finance Lead','Startup Advisor','Event Producer'];
+const COMPANIES=['Bengaluru','Koramangala','Indiranagar','HSR Layout','Whitefield','Jayanagar','BTM Layout','Marathahalli','Yelahanka','Sarjapur'];
+const WHO_OPTS=['Entrepreneur','Employee','Freelancer','Investor','Student','Creator'];
+const SCENE_OPTS=['Business','Startups','Investment','Technology','Travel','Food','Music','Sports','Open Table'];
+const COLORS=['#FF6900','#00E5FF','#39FF14','#FF3860','#FFD700','#A855F7','#F97316','#06B6D4'];
+
+function buildDashboard(){
+  S.members=[];
+  for(let i=0;i<18;i++){
+    S.members.push({
+      id:i, name:NAMES[i%NAMES.length], role:ROLES[i%ROLES.length],
+      location:COMPANIES[i%COMPANIES.length],
+      who:WHO_OPTS[i%WHO_OPTS.length], scene:SCENE_OPTS[i%SCENE_OPTS.length],
+      color:COLORS[i%COLORS.length], connected:false,
+      initials:NAMES[i%NAMES.length].split(' ').map(n=>n[0]).join('')
+    });
+  }
+  // add self
+  document.getElementById('hud-user-name').textContent=S.name.toUpperCase();
+  const sceneEmojis={Business:'🤝',Startups:'🚀',Investment:'📈',Technology:'⚡',Travel:'✈️',Food:'🍔',Music:'🎵',Sports:'🏏','Open Table':'🪑'};
+  const em=sceneEmojis[S.scene]||'🎯';
+  document.getElementById('sb-emoji').textContent=em;
+  document.getElementById('sb-label').textContent=S.scene.toUpperCase();
+  document.getElementById('hud-scene-badge').textContent=S.scene.toUpperCase();
+  renderMembers();
+  buildFeed();
+  updateDashStats();
+  startLiveFeed();
+}
+
+function renderMembers(){
+  const list=document.getElementById('member-list');
+  list.innerHTML='';
+  S.members.forEach(m=>{
+    const sameScene=m.scene===S.scene;
+    const card=document.createElement('div');
+    card.className='member-card';
+    card.id='mc-'+m.id;
+    card.innerHTML=`
+      <div class="avatar" style="background:${m.color}22;color:${m.color};border:1px solid ${m.color}44">${m.initials}</div>
+      <div class="member-info">
+        <div class="member-name">${m.name}</div>
+        <div class="member-role">${m.role} · ${m.location}</div>
+        <div class="member-meta">
+          <span class="meta-chip mc-o">${m.who}</span>
+          <span class="meta-chip ${sameScene?'mc-c':'mc-g'}">${sameScene?'SAME SCENE':m.scene}</span>
+        </div>
+      </div>
+      <button class="connect-btn" onclick="triggerConnect(${m.id})" id="cb-${m.id}">CONNECT</button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function updateDashStats(){
+  document.getElementById('d-total').textContent=S.liveCount;
+  document.getElementById('d-conns').textContent=S.connections;
+  const sameCount=S.members.filter(m=>m.scene===S.scene&&!m.connected).length;
+  document.getElementById('d-scene-count').textContent=sameCount;
+}
+
+// ── CONNECT FLOW ──
+function triggerConnect(id){
+  const m=S.members.find(x=>x.id===id);
+  if(!m||m.connected)return;
+  const modal=document.getElementById('conn-modal');
+  modal.classList.add('show');
+  document.getElementById('modal-success').style.display='none';
+  const steps=['ps1','ps2','ps3','ps4'];
+  steps.forEach(s=>{const el=document.getElementById(s);el.classList.remove('active','done')});
+  document.getElementById('modal-steps').style.display='flex';
+  let i=0;
+  const next=()=>{
+    if(i>0)document.getElementById(steps[i-1]).className='prog-step done';
+    if(i<steps.length){
+      document.getElementById(steps[i]).className='prog-step active';
+      i++;setTimeout(next,700);
+    } else {
+      m.connected=true;S.connections++;
+      document.getElementById('modal-steps').style.display='none';
+      const succ=document.getElementById('modal-success');
+      succ.style.display='block';
+      document.getElementById('modal-success-name').textContent='You are now connected with '+m.name+' · Verified at '+VENUE_CONFIG.name;
+      document.getElementById('cb-'+id).textContent='CONNECTED';
+      document.getElementById('cb-'+id).className='connect-btn done';
+      updateDashStats();
+      addFeedItem(S.name.split(' ')[0]+' connected with <b>'+m.name+'</b>');
+      setTimeout(()=>closeModal(),2200);
+    }
+  };
+  next();
+}
+function closeModal(){
+  document.getElementById('conn-modal').classList.remove('show');
+}
+
+// ── LIVE FEED ──
+const FEED_TEMPLATES=[
+  ()=>`${pickRand(NAMES).split(' ')[0]} just checked in · <b>${pickRand(WHO_OPTS)}</b>`,
+  ()=>`${pickRand(NAMES).split(' ')[0]} is here for <b>${pickRand(SCENE_OPTS)}</b>`,
+  ()=>`New <b>${pickRand(WHO_OPTS)}</b> joined the room`,
+  ()=>`${pickRand(NAMES).split(' ')[0]} opened an <b>Open Table</b>`,
+  ()=>`${pickRand(NAMES).split(' ')[0]} connected with <b>${pickRand(NAMES).split(' ')[0]}</b>`,
+];
+function pickRand(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function addFeedItem(html){
+  const list=document.getElementById('feed-list');
+  const item=document.createElement('div');
+  item.className='feed-item';
+  item.innerHTML=`<div class="feed-dot"></div><span>${html}</span>`;
+  list.insertBefore(item,list.firstChild);
+  while(list.children.length>8)list.removeChild(list.lastChild);
+}
+function buildFeed(){
+  for(let i=0;i<5;i++) addFeedItem(pickRand(FEED_TEMPLATES)());
+}
+function startLiveFeed(){
+  setInterval(()=>{
+    if(Math.random()>.4) addFeedItem(pickRand(FEED_TEMPLATES)());
+  },5000);
+}
+</script>
+</body>
+</html>
