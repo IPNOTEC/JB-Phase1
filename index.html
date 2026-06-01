@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>JOBZ.BAR · TOIT</title>
+<title>JOBZ.BAR · BENGALURU NODE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
 <style>
@@ -11,7 +11,7 @@
 :root{
   --o:#FF6900;--g:#39FF14;--c:#00E5FF;--w:#fff;
   --bg:#060606;--bg2:#0d0d0d;--bg3:#111;
-  --border:#1e1e1e;--muted:#444;
+  --border:#1e1e1e;--muted:#666;
   --fh:'Orbitron',sans-serif;--fb:'JetBrains Mono',monospace;
 }
 html,body{min-height:100%;background:var(--bg);color:#ccc;font-family:var(--fb);overscroll-behavior:none}
@@ -26,17 +26,27 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
 .venue-tag{font-size:.6rem;letter-spacing:3px;color:var(--o);background:rgba(255,105,0,.1);border:1px solid rgba(255,105,0,.25);padding:.25rem .75rem;border-radius:2px}
 .body-pad{padding:1.5rem}
 .label{font-size:.6rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:.5rem;display:block}
+
+/* Surgical Change: Amplified Contrast Tone for Low-Light Visibility */
+.sub-label{font-size:.62rem;color:#aaa;margin-top:.45rem;line-height:1.4;display:block}
+
 .inp{width:100%;background:var(--bg2);border:1px solid var(--border);color:#fff;font-family:var(--fb);font-size:.9rem;padding:.85rem 1rem;border-radius:4px;outline:none;transition:border .2s}
 .inp:focus{border-color:rgba(255,105,0,.5)}
-.inp::placeholder{color:#333}
-.inp-grp{margin-bottom:1.25rem}
+.inp::placeholder{color:#666}
+.inp-grp{margin-bottom:1.5rem}
 .btn-primary{width:100%;background:var(--o);color:#000;font-family:var(--fh);font-size:.75rem;font-weight:700;letter-spacing:2px;padding:1rem;border:none;border-radius:4px;cursor:pointer;transition:opacity .2s,transform .1s}
 .btn-primary:active{transform:scale(.98);opacity:.9}
 .btn-secondary{width:100%;background:transparent;color:var(--c);font-family:var(--fh);font-size:.65rem;font-weight:700;letter-spacing:2px;padding:.85rem;border:1px solid rgba(0,229,255,.3);border-radius:4px;cursor:pointer;transition:background .2s}
 .btn-secondary:hover{background:rgba(0,229,255,.05)}
 .section-title{font-family:var(--fh);font-size:.65rem;font-weight:700;color:var(--c);letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
-.err-msg{font-size:.7rem;color:#c44;margin-top:.35rem;display:none}
+.err-msg{font-size:.7rem;color:#ff3355;margin-top:.35rem;display:none}
 .err-msg.show{display:block}
+
+/* Surgical Change: High-Trust White Box Compliance Panel */
+.terms-white-box{background:#fff;color:#000;padding:1rem;border-radius:4px;margin-top:1.25rem;display:flex;align-items:flex-start;gap:.75rem;border:1px solid #ddd}
+.terms-white-box input[type="checkbox"]{margin-top:.15rem;cursor:pointer;accent-color:var(--o)}
+.terms-text-wrap{font-size:.65rem;font-family:var(--fb);line-height:1.4;color:#111}
+.terms-text-wrap b{color:#000}
 
 /* ── SCAN ENTRY ── */
 #s-scan{justify-content:space-between}
@@ -50,33 +60,33 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
 .live-ticker::before{content:'';position:absolute;left:0;top:0;bottom:0;width:48px;background:linear-gradient(90deg,var(--bg),transparent);z-index:1}
 .ticker-inner{display:inline-block;animation:ticker 28s linear infinite}
 @keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.ticker-inner span{font-size:.65rem;color:#555;margin-right:3rem}
+.ticker-inner span{font-size:.65rem;color:#888;margin-right:3rem}
 .ticker-inner span b{color:var(--o);font-weight:400}
 .scan-footer{padding:1.25rem 1.5rem}
 .live-dot{display:inline-block;width:6px;height:6px;background:var(--g);border-radius:50%;margin-right:.5rem;animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.live-count{font-size:.7rem;color:#555;margin-bottom:1rem;display:flex;align-items:center}
-.live-count strong{color:#888;margin:0 .25rem}
+.live-count{font-size:.7rem;color:#666;margin-bottom:1rem;display:flex;align-items:center}
+.live-count strong{color:#aaa;margin:0 .25rem}
 
-/* ── REGISTRATION ── */
+/* ── REGISTRATION & PROFILE ── */
 .back-btn{background:none;border:none;color:var(--muted);font-family:var(--fb);font-size:.7rem;cursor:pointer;padding:.5rem 0;letter-spacing:1px;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem}
 .back-btn:hover{color:#fff}
 .step-indicator{display:flex;gap:.5rem;margin-bottom:2rem}
 .step-dot{height:3px;flex:1;background:var(--border);border-radius:2px;transition:background .3s}
 .step-dot.active{background:var(--o)}
 .step-dot.done{background:#333}
-.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.25rem}
-.who-btn{background:var(--bg2);border:1px solid var(--border);color:#666;font-family:var(--fb);font-size:.72rem;padding:.75rem .5rem;border-radius:4px;cursor:pointer;text-align:center;transition:all .2s}
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:0.75rem}
+.who-btn{background:var(--bg2);border:1px solid var(--border);color:#888;font-family:var(--fb);font-size:.72rem;padding:.75rem .5rem;border-radius:4px;cursor:pointer;text-align:center;transition:all .2s}
 .who-btn.sel{background:rgba(255,105,0,.12);border-color:rgba(255,105,0,.5);color:var(--o)}
 .who-btn .emoji{font-size:1.1rem;display:block;margin-bottom:.3rem}
-.scene-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:1.25rem}
-.scene-btn{background:var(--bg2);border:1px solid var(--border);color:#555;font-family:var(--fb);font-size:.65rem;padding:.6rem .4rem;border-radius:4px;cursor:pointer;text-align:center;transition:all .2s;line-height:1.3}
+.scene-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:0.75rem}
+.scene-btn{background:var(--bg2);border:1px solid var(--border);color:#888;font-family:var(--fb);font-size:.65rem;padding:.6rem .4rem;border-radius:4px;cursor:pointer;text-align:center;transition:all .2s;line-height:1.3}
 .scene-btn .emoji{font-size:1rem;display:block;margin-bottom:.25rem}
 .scene-btn.sel{background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.4);color:var(--c)}
 
 /* ── OTP SCREEN ── */
 .otp-disp{font-family:var(--fh);font-size:1.8rem;letter-spacing:8px;color:var(--o);text-align:center;padding:1.25rem;background:rgba(255,105,0,.07);border:1px solid rgba(255,105,0,.2);border-radius:4px;margin-bottom:1.5rem}
-.otp-hint{font-size:.7rem;color:#444;text-align:center;margin-bottom:1.5rem}
+.otp-hint{font-size:.7rem;color:#666;text-align:center;margin-bottom:1.5rem}
 .otp-inp-row{display:flex;gap:.5rem;justify-content:center;margin-bottom:1.5rem}
 .otp-char{width:44px;height:52px;background:var(--bg2);border:1px solid var(--border);color:#fff;font-family:var(--fh);font-size:1.2rem;text-align:center;border-radius:4px;outline:none;transition:border .2s}
 .otp-char:focus{border-color:var(--o)}
@@ -85,61 +95,73 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
 #s-dash{background:var(--bg)}
 .dash-hud{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
 .hud-venue{font-family:var(--fh);font-size:.55rem;color:var(--o);letter-spacing:3px}
-.hud-user{font-size:.65rem;color:#555;display:flex;align-items:center;gap:.4rem}
+.hud-user{font-size:.65rem;color:#888;display:flex;align-items:center;gap:.4rem}
 .hud-badge{background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2);color:var(--c);font-size:.55rem;letter-spacing:2px;padding:.2rem .5rem;border-radius:2px}
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.stat-row.frozen{opacity:0.4;pointer-events:none}
 .stat-cell{background:var(--bg2);padding:.85rem;text-align:center}
 .stat-cell .n{font-family:var(--fh);font-size:1.3rem;font-weight:700;color:#fff}
 .stat-cell.green .n{color:var(--g)}
 .stat-cell.orange .n{color:var(--o)}
 .stat-cell.cyan .n{color:var(--c)}
-.stat-cell .l{font-size:.55rem;color:#444;letter-spacing:2px;text-transform:uppercase;margin-top:.25rem}
+.stat-cell .l{font-size:.55rem;color:#666;letter-spacing:2px;text-transform:uppercase;margin-top:.25rem}
 .dash-body{padding:1.25rem 1.5rem;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.dash-body.frozen{opacity:0.2;pointer-events:none;filter:blur(2px)}
 .scene-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);color:var(--c);font-size:.6rem;letter-spacing:2px;padding:.35rem .75rem;border-radius:20px;margin-bottom:1.25rem}
 .member-list{display:flex;flex-direction:column;gap:.6rem}
 .member-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.9rem 1rem;display:flex;align-items:center;gap:.85rem;transition:border .2s}
 .member-card:hover{border-color:#2a2a2a}
+.member-card.pinned{border:1px solid rgba(0,229,255,0.3);background:linear-gradient(160deg, #0d0d0d 0%, #060a0d 100%)}
 .avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:.7rem;font-weight:700;flex-shrink:0}
 .member-info{flex:1;min-width:0}
 .member-name{font-size:.8rem;color:#ccc;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.member-role{font-size:.65rem;color:#555;margin-top:.15rem}
-.member-meta{display:flex;align-items:center;gap:.35rem;margin-top:.3rem;flex-wrap:wrap}
+.member-role{font-size:.65rem;color:#888;margin-top:.15rem}
+.member-pub{font-size:.6rem;color:var(--o);font-family:var(--fh);letter-spacing:1px;margin-top:.1rem}
+.member-meta{display:flex;align-items:center;gap:.35rem;margin-top:.4rem;flex-wrap:wrap}
 .meta-chip{font-size:.55rem;padding:.2rem .5rem;border-radius:2px;letter-spacing:1px}
 .mc-o{background:rgba(255,105,0,.1);color:var(--o);border:1px solid rgba(255,105,0,.2)}
 .mc-c{background:rgba(0,229,255,.08);color:var(--c);border:1px solid rgba(0,229,255,.2)}
 .mc-g{background:rgba(57,255,20,.07);color:var(--g);border:1px solid rgba(57,255,20,.2)}
+.mc-p{background:rgba(0,229,255,0.15);color:var(--c);border:1px solid rgba(0,229,255,0.4);font-weight:600}
 .connect-btn{background:transparent;border:1px solid rgba(255,105,0,.3);color:var(--o);font-family:var(--fb);font-size:.6rem;letter-spacing:1px;padding:.4rem .75rem;border-radius:3px;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
 .connect-btn:hover{background:rgba(255,105,0,.1)}
 .connect-btn.done{border-color:rgba(57,255,20,.3);color:var(--g);cursor:default}
 .feed-list{display:flex;flex-direction:column;gap:.5rem;margin-top:.25rem}
-.feed-item{font-size:.7rem;color:#444;padding:.5rem 0;border-bottom:1px solid #111;display:flex;align-items:flex-start;gap:.5rem;line-height:1.4}
+.feed-item{font-size:.7rem;color:#666;padding:.5rem 0;border-bottom:1px solid #111;display:flex;align-items:flex-start;gap:.5rem;line-height:1.4}
 .feed-dot{width:5px;height:5px;border-radius:50%;background:var(--o);margin-top:.4rem;flex-shrink:0}
-.feed-item b{color:#666;font-weight:400}
-.dash-footer{background:var(--bg2);border-top:1px solid var(--border);padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
-.footer-note{font-size:.6rem;color:#333;letter-spacing:1px;text-align:center}
+.feed-item b{color:#aaa;font-weight:400}
+.dash-footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.25rem 1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem}
+.btn-exit{width:100%;background:rgba(255,51,85,0.1);border:1px solid rgba(255,51,85,0.3);color:#ff3355;font-family:var(--fh);font-size:.65rem;font-weight:700;letter-spacing:2px;padding:1rem;border-radius:4px;cursor:pointer;transition:all .2s}
+.btn-exit:hover{background:rgba(255,51,85,0.25)}
+.footer-note{font-size:.6rem;color:#666;letter-spacing:1px;text-align:center}
 
-/* ── MODAL OVERLAY ── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .3s}
+/* ── CHAT ENVIRONMENT OVERLAY ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:100;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .3s}
 .modal-bg.show{opacity:1;pointer-events:all}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:400px;padding:2rem;position:relative}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:8px;width:100%;max-width:400px;padding:1.5rem;position:relative}
 .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.25rem;line-height:1}
-.modal-title{font-family:var(--fh);font-size:.8rem;color:#fff;letter-spacing:2px;margin-bottom:1.5rem;text-align:center}
-.progress-steps{display:flex;flex-direction:column;gap:.75rem}
-.prog-step{display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:#444;transition:color .4s}
-.prog-step.active{color:#ccc}
-.prog-step.done{color:var(--g)}
-.prog-icon{width:20px;height:20px;border-radius:50%;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:.6rem;flex-shrink:0;transition:all .4s}
-.prog-step.active .prog-icon{border-color:var(--o);color:var(--o);animation:spin 1s linear infinite}
-.prog-step.done .prog-icon{border-color:var(--g);color:var(--g)}
-@keyframes spin{to{transform:rotate(360deg)}}
-.modal-success{text-align:center;padding:1rem 0;display:none}
-.modal-success .check{font-family:var(--fh);font-size:2rem;color:var(--g);margin-bottom:.75rem}
-.modal-success p{font-size:.8rem;color:#ccc;line-height:1.6}
+.modal-title{font-family:var(--fh);font-size:.75rem;color:#fff;letter-spacing:2px;margin-bottom:1.25rem;text-align:center}
+.chat-container{display:flex;flex-direction:column;height:240px;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.75rem;margin-bottom:1rem;overflow-y:auto;gap:.5rem}
+.chat-msg{font-size:.7rem;padding:.5rem .75rem;border-radius:4px;max-width:85%;line-height:1.4}
+.chat-msg.sys{background:rgba(0,229,255,0.04);color:var(--c);border:1px solid rgba(0,229,255,0.12);align-self:center;text-align:center;max-width:100%;font-size:.6rem;letter-spacing:1px}
+.chat-msg.them{background:var(--bg3);color:#ccc;border:1px solid var(--border);align-self:flex-start}
+.chat-msg.me{background:rgba(255,105,0,0.1);color:var(--o);border:1px solid rgba(255,105,0,0.2);align-self:flex-end}
+.chat-input-row{display:flex;gap:.5rem}
 
-/* ── CONNECTING ANIM ── */
+/* ── LEDGER SCREEN (EMAIL RECONCILIATION) ── */
+.email-screen{background:#0a0a0a;color:#bbb;font-family:var(--fb);padding:2rem 1.5rem;overflow-y:auto;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.email-card{background:#fff;color:#333;border-radius:6px;padding:2rem;box-shadow:0 15px 40px rgba(0,0,0,0.6);font-family:sans-serif;width:100%;max-width:440px}
+.email-header{border-bottom:2px solid #f0f0f0;padding-bottom:1rem;margin-bottom:1.5rem}
+.email-logo{font-family:var(--fh);font-size:1.3rem;font-weight:900;color:#000;letter-spacing:1px}
+.email-logo span{color:var(--o)}
+.email-meta-line{font-size:.75rem;color:#666;margin-top:.3rem}
+.email-body{font-size:.85rem;line-height:1.6;color:#444}
+.handshake-block{background:#f9f9f9;border-left:3px solid var(--o);padding:1rem;margin:1rem 0;border-radius:0 4px 4px 0}
+.handshake-title{font-weight:700;color:#111;font-size:.8rem;letter-spacing:1px;text-transform:uppercase}
+
 .scan-ring{width:80px;height:80px;border-radius:50%;border:2px solid transparent;border-top-color:var(--o);animation:spin 1.2s linear infinite;margin:1.5rem auto}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── RESPONSIVE ── */
 @media(max-width:380px){
   .scan-big{font-size:2.2rem}
   .who-grid{grid-template-columns:1fr 1fr}
@@ -158,13 +180,11 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
 
   <div class="live-ticker">
     <div class="ticker-inner">
-      <span>Arjun checked in · <b>Startup</b></span>
-      <span>Priya is looking for <b>Travel buddies</b></span>
-      <span>3 new <b>Entrepreneurs</b> just joined</span>
-      <span>Vikram connected with <b>2 new people</b></span>
-      <span>Deepa is here for <b>Investment</b> conversations</span>
-      <span>Rohan posted a <b>CTO role</b> · Bengaluru</span>
-      <span>Naina just joined · <b>Creator</b></span>
+      <span>Bharath checked in · <b>TOIT · Indiranagar</b></span>
+      <span>Bholey is evaluating targets · <b>TAG · Devanahalli</b></span>
+      <span>Puneet launched communication block · <b>Watsons · Ulsoor</b></span>
+      <span>Ananya opened live conversation · <b>Social · Koramangala</b></span>
+      <span>Vikram matched proximity keys · <b>The Byg Brewski · HSR Layout</b></span>
     </div>
   </div>
 
@@ -172,26 +192,26 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
     <div class="scan-big">JOBZ<span>.BAR</span></div>
     <div class="scan-sub">VERIFIED HUMANS · REAL VENUES</div>
     <div class="scan-divider"></div>
-    <div class="live-count"><span class="live-dot"></span> <strong id="live-n">47</strong>&nbsp;professionals checked in tonight</div>
+    <div class="live-count"><span class="live-dot"></span> <strong id="live-n">47</strong>&nbsp;professionals online across 10 hubs</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-top:1rem">
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.75rem;text-align:center">
         <div style="font-family:var(--fh);font-size:1rem;color:var(--o)" id="count-ent">14</div>
-        <div style="font-size:.55rem;color:#444;letter-spacing:2px;margin-top:.2rem">FOUNDERS</div>
+        <div style="font-size:.55rem;color:#666;letter-spacing:2px;margin-top:.2rem">FOUNDERS</div>
       </div>
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.75rem;text-align:center">
         <div style="font-family:var(--fh);font-size:1rem;color:var(--c)" id="count-emp">22</div>
-        <div style="font-size:.55rem;color:#444;letter-spacing:2px;margin-top:.2rem">EMPLOYEES</div>
+        <div style="font-size:.55rem;color:#666;letter-spacing:2px;margin-top:.2rem">EMPLOYEES</div>
       </div>
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:.75rem;text-align:center">
         <div style="font-family:var(--fh);font-size:1rem;color:var(--g)" id="count-inv">11</div>
-        <div style="font-size:.55rem;color:#444;letter-spacing:2px;margin-top:.2rem">INVESTORS</div>
+        <div style="font-size:.55rem;color:#666;letter-spacing:2px;margin-top:.2rem">INVESTORS</div>
       </div>
     </div>
   </div>
 
   <div class="scan-footer">
     <button class="btn-primary" onclick="goto('s-reg1')">JOIN TONIGHT'S ROOM</button>
-    <p style="font-size:.6rem;color:#333;text-align:center;margin-top:.75rem;letter-spacing:1px">FREE · NO APP DOWNLOAD · 60 SECONDS</p>
+    <p style="font-size:.6rem;color:#444;text-align:center;margin-top:.75rem;letter-spacing:1px">FREE · NO APP DOWNLOAD · DPDP COMPLIANT</p>
   </div>
 </div>
 
@@ -218,13 +238,25 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
     <div class="inp-grp">
       <span class="label">Mobile Number</span>
       <input class="inp" id="reg-phone" type="tel" placeholder="98xxxxxxxx" maxlength="10"/>
+      <span class="sub-label">[ Secured under DPDP Guidelines: Mobile numbers are processed solely for point-of-presence OTP authentication layer. No tracking databases are compiled. ]</span>
       <div class="err-msg" id="err-phone">Enter 10-digit mobile</div>
     </div>
     <div class="inp-grp">
-      <span class="label">Email</span>
+      <span class="label">Corporate Email Address</span>
       <input class="inp" id="reg-email" type="email" placeholder="you@example.com"/>
+      <span class="sub-label">[ Verified Ledger Integration: A summary of your real-world conversation handshakes will be sent to your email address once you Exit the premises. ]</span>
       <div class="err-msg" id="err-email">Enter valid email</div>
     </div>
+
+    <!-- Surgical Change: Integrated White Compliance Panel with Explicit Checkbox Gate -->
+    <div class="terms-white-box">
+      <input type="checkbox" id="reg-terms"/>
+      <div class="terms-text-wrap">
+        I read and accept the <b>DPDP Compliance Framework</b>. My phone telemetry is isolated strictly for verification, and my connection summary ledger will be securely exported via my provided corporate email address upon session exit.
+      </div>
+    </div>
+    <div class="err-msg" id="err-terms">You must accept the terms to unlock routing.</div>
+
   </div>
   <div style="padding:1.25rem 1.5rem">
     <button class="btn-primary" onclick="validateReg1()">CONTINUE →</button>
@@ -245,7 +277,7 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
       <div class="step-dot"></div>
     </div>
     <div class="section-title">OTP VERIFICATION</div>
-    <p style="font-size:.75rem;color:#555;margin-bottom:1.5rem;line-height:1.6">OTP sent to <span id="otp-phone-disp" style="color:#aaa"></span></p>
+    <p style="font-size:.75rem;color:#666;margin-bottom:1.5rem;line-height:1.6">OTP sent to <span id="otp-phone-disp" style="color:#aaa"></span></p>
     <div class="otp-inp-row">
       <input class="otp-char" id="o1" maxlength="1" type="number" inputmode="numeric"/>
       <input class="otp-char" id="o2" maxlength="1" type="number" inputmode="numeric"/>
@@ -257,11 +289,10 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
   </div>
   <div style="padding:1.25rem 1.5rem">
     <button class="btn-primary" onclick="verifyOTP()">VERIFY OTP</button>
-    <button class="btn-secondary" style="margin-top:.5rem" onclick="resendOTP()">RESEND OTP</button>
   </div>
 </div>
 
-<!-- ═══════════ SCREEN 3: WHO + SCENE ═══════════ -->
+<!-- ═══════════ SCREEN 3: PROFILE + INTENT RADAR ═══════════ -->
 <div id="s-reg2" class="screen hidden">
   <div class="logo-bar">
     <div class="logo-txt">JOBZ<span>.BAR</span></div>
@@ -274,7 +305,8 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
       <div class="step-dot done"></div>
       <div class="step-dot active"></div>
     </div>
-    <div class="section-title" style="margin-bottom:.75rem">WHO ARE YOU?</div>
+    
+    <div class="section-title" style="margin-bottom:.75rem">WHAT IS YOUR PERSONA?</div>
     <div class="who-grid" id="who-grid">
       <button class="who-btn" data-val="Entrepreneur" onclick="selWho(this)"><span class="emoji">🚀</span>Entrepreneur</button>
       <button class="who-btn" data-val="Employee" onclick="selWho(this)"><span class="emoji">💼</span>Employee</button>
@@ -283,9 +315,12 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
       <button class="who-btn" data-val="Student" onclick="selWho(this)"><span class="emoji">🎓</span>Student</button>
       <button class="who-btn" data-val="Creator" onclick="selWho(this)"><span class="emoji">🎨</span>Creator</button>
     </div>
-    <div class="err-msg" id="err-who" style="margin-bottom:.75rem">Select who you are</div>
+    <div class="inp-grp" style="margin-bottom:1.5rem">
+      <input class="inp" id="custom-who" type="text" placeholder="Or enter custom persona (e.g. DeepTech Founder)" oninput="customWhoTyped()"/>
+    </div>
+    <div class="err-msg" id="err-who" style="margin-bottom:.75rem">Select or type your persona</div>
 
-    <div class="section-title" style="margin-bottom:.75rem;margin-top:.25rem">WHAT'S YOUR SCENE TONIGHT?</div>
+    <div class="section-title" style="margin-bottom:.75rem;margin-top:.25rem">YOUR TOPIC OF DISCUSSION TONIGHT</div>
     <div class="scene-grid" id="scene-grid">
       <button class="scene-btn" data-val="Business" onclick="selScene(this)"><span class="emoji">🤝</span>Business</button>
       <button class="scene-btn" data-val="Startups" onclick="selScene(this)"><span class="emoji">🚀</span>Startups</button>
@@ -297,21 +332,24 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
       <button class="scene-btn" data-val="Sports" onclick="selScene(this)"><span class="emoji">🏏</span>Sports</button>
       <button class="scene-btn" data-val="Open Table" onclick="selScene(this)"><span class="emoji">🪑</span>Open Table</button>
     </div>
-    <div class="err-msg" id="err-scene" style="margin-bottom:.75rem">Select your scene</div>
+    <div class="inp-grp">
+      <input class="inp" id="custom-scene" type="text" placeholder="Or enter custom topic (e.g. Core Unit Economics)" oninput="customSceneTyped()"/>
+    </div>
+    <div class="err-msg" id="err-scene" style="margin-bottom:.75rem">Select or type your discussion target</div>
   </div>
   <div style="padding:1.25rem 1.5rem">
     <button class="btn-primary" onclick="enterDash()">ENTER THE ROOM →</button>
   </div>
 </div>
 
-<!-- ═══════════ SCREEN 4: CONNECTING ANIM ═══════════ -->
+<!-- ═══════════ SCREEN 4: LINK SYNCING LAYERS ═══════════ -->
 <div id="s-connect" class="screen hidden" style="align-items:center;justify-content:center">
   <div class="scan-ring"></div>
   <div style="font-family:var(--fh);font-size:.7rem;color:var(--o);letter-spacing:3px;text-align:center" id="conn-msg">SCANNING VENUE</div>
-  <p style="font-size:.65rem;color:#333;margin-top:.75rem;letter-spacing:2px">VERIFYING IDENTITY</p>
+  <p style="font-size:.65rem;color:#444;margin-top:.75rem;letter-spacing:2px">DPDP INTEGRITY PROTOCOLS COUPLING</p>
 </div>
 
-<!-- ═══════════ SCREEN 5: DASHBOARD ═══════════ -->
+<!-- ═══════════ SCREEN 5: REAL-TIME HUB MATRIX ═══════════ -->
 <div id="s-dash" class="screen hidden">
   <div class="dash-hud">
     <div>
@@ -321,57 +359,74 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh}
     <div class="hud-badge" id="hud-scene-badge">—</div>
   </div>
 
-  <div class="stat-row">
+  <div class="stat-row" id="hud-stat-bar">
     <div class="stat-cell orange">
-      <div class="n" id="d-total">48</div><div class="l">In Room</div>
+      <div class="n" id="d-total">48</div><div class="l">City Wide</div>
     </div>
     <div class="stat-cell cyan">
       <div class="n" id="d-conns">0</div><div class="l">Connections</div>
     </div>
     <div class="stat-cell green">
-      <div class="n" id="d-scene-count">—</div><div class="l">Same Scene</div>
+      <div class="n" id="d-scene-count">—</div><div class="l">Matching</div>
     </div>
   </div>
 
-  <div class="dash-body">
-    <!-- SCENE FILTER -->
+  <div class="dash-body" id="hud-dash-body">
     <div class="scene-badge" id="my-scene-badge">
-      <span id="sb-emoji">🤝</span>&nbsp;<span id="sb-label">YOUR SCENE</span>
+      <span id="sb-emoji">🎯</span>&nbsp;<span id="sb-label">TOPIC</span>
     </div>
 
-    <!-- MEMBERS IN ROOM -->
-    <div class="section-title">WHO'S HERE NOW</div>
+    <div class="section-title">BENGALURU GRAPH RADAR · ACTIVE CROSS-TALK</div>
     <div class="member-list" id="member-list"></div>
 
-    <!-- LIVE FEED -->
-    <div class="section-title" style="margin-top:1.5rem">LIVE ACTIVITY</div>
+    <div class="section-title" style="margin-top:1.5rem">NETWORK PACKET STREAM</div>
     <div class="feed-list" id="feed-list"></div>
   </div>
 
   <div class="dash-footer">
-    <div class="footer-note">
-      <span class="live-dot"></span> SESSION ACTIVE · ENDS WHEN YOU LEAVE
+    <button class="btn-exit" id="exit-action-trigger" onclick="triggerExitVenue()">EXIT VENUE &amp; EMIT LEDGER</button>
+    <div class="footer-note" style="margin-top:.5rem">
+      <span class="live-dot"></span> SESSION SECURED · COMPLIANT WITH DPDP ACT
     </div>
   </div>
 </div>
 
-<!-- ═══════════ CONNECT MODAL ═══════════ -->
+<!-- ═══════════ CHAT ENVIRONMENT GATEWAY (1-ON-1 INTERACTION PORTAL) ═══════════ -->
 <div class="modal-bg" id="conn-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">×</button>
-    <div class="modal-title">ESTABLISHING CONNECTION</div>
-    <div class="progress-steps" id="modal-steps">
-      <div class="prog-step" id="ps1"><div class="prog-icon">◌</div><span>Scanning member profile</span></div>
-      <div class="prog-step" id="ps2"><div class="prog-icon">◌</div><span>Verifying co-presence</span></div>
-      <div class="prog-step" id="ps3"><div class="prog-icon">◌</div><span>Creating connection</span></div>
-      <div class="prog-step" id="ps4"><div class="prog-icon">◌</div><span>Updating live network</span></div>
-    </div>
-    <div class="modal-success" id="modal-success">
-      <div class="check">✓</div>
-      <div style="font-family:var(--fh);font-size:.9rem;color:var(--g);letter-spacing:2px;margin-bottom:.5rem">CONNECTION VERIFIED</div>
-      <p id="modal-success-name"></p>
+    <div class="modal-title" id="chat-modal-title">SECURE DEVICE ROUTING</div>
+    
+    <div class="chat-container" id="chat-box"></div>
+    
+    <div class="chat-input-row" id="chat-input-area">
+      <input class="inp" id="chat-typed-msg" placeholder="Type response line to seal handshake..." style="font-size:.75rem;padding:.5rem"/>
+      <button class="btn-primary" onclick="sendMyMessage()" style="width:auto;padding:.5rem 1rem">SEND</button>
     </div>
   </div>
+</div>
+
+<!-- ═══════════ SCREEN 6: COMPLIANCE RECONCILIATION LOGS TERMINAL (EMAIL SUMMARY) ═══════════ -->
+<div id="s-email" class="screen hidden email-screen">
+  <div class="email-card">
+    <div class="email-header">
+      <div class="email-logo">JOBZ<span>.BAR</span></div>
+      <div class="email-meta-line" id="em-meta-to"><b>To:</b> user@corporate.com</div>
+      <div class="email-meta-line"><b>From:</b> compliance-ledger@jobz.bar</div>
+      <div class="email-meta-line"><b>Subject:</b> Proximity Reconciliation Ledger &amp; Connection Digests</div>
+    </div>
+    <div class="email-body">
+      <p>Hello <span id="em-user-name" style="font-weight:600">User</span>,</p><br>
+      <p>Pursuant to your session termination statement executed at <b>TOIT, Indiranagar</b>, this node has dropped your presence record and safely expunged telemetry caches under the Indian DPDP Framework guidelines.</p><br>
+      
+      <p style="font-weight:700;color:#111;text-transform:uppercase;font-size:.72rem;letter-spacing:1px;margin-top:.5rem">Exchanged Handshake Summary Records:</p>
+      <div id="em-logs-container"></div>
+      
+      <p style="margin-top:1rem;font-size:.75rem;color:#777">These cryptographic tokens log actual real-world presence handshakes validated by shared location node parameters during your active window.</p><br>
+      <p>Regards,<br><b>JOBZ.BAR Security Nodes</b><br><small style="color:#aaa">Bengaluru Data Core Cluster</small></p>
+    </div>
+  </div>
+  <button class="btn-secondary" style="margin-top:1.5rem;color:var(--o);border-color:rgba(255,105,0,.3);width:100%;max-width:440px" onclick="window.location.reload()">RE-ENTER PLATFORM RADAR</button>
 </div>
 
 <script>
@@ -383,65 +438,68 @@ const VENUE_CONFIG = {
   slug: 'TOIT'
 };
 
-// Read slug from URL: jobz.bar/toit
-(function(){
-  const path = window.location.pathname.replace('/','').toUpperCase();
-  if(path && path.length > 0){
-    VENUE_CONFIG.slug = path;
-    VENUE_CONFIG.name = path;
-  }
-  document.getElementById('venue-label').textContent = VENUE_CONFIG.name + ' · ' + VENUE_CONFIG.location;
-  document.getElementById('venue-label2').textContent = VENUE_CONFIG.name;
-  document.getElementById('hud-venue-name').textContent = VENUE_CONFIG.name + ' · ' + VENUE_CONFIG.location + ' · LIVE';
-})();
-
 // ── STATE ──
 const S = {
   name:'', phone:'', email:'', who:'', scene:'', connections:0,
-  members:[], feedItems:[], liveCount:47
+  members:[], feedItems:[], liveCount:47, activeChatMemberId: null
 };
 
-// ── NAVIGATION ──
+// ── 10 STRATEGIC PUBS BENGALURU CROSS-TALK ROUTING NODE DATA ──
+const PUBS_GRAPH_SEEDS = [
+  { name: 'Bharath', role: 'Founder', location: 'Indiranagar', pub: 'TOIT', who: 'Entrepreneur', scene: 'Business', color: '#FF6900', opener: 'Hey! Tracking your topic profile from the opposite counter block. Let\'s clear the log frames.' },
+  { name: 'Bholey', role: 'AI Architect', location: 'Devanahalli', pub: 'TAG', who: 'Freelancer', scene: 'Technology', color: '#00E5FF', opener: 'Are you running operations with local device frameworks or scaling edge container loops?' },
+  { name: 'Puneet', role: 'Developer', location: 'Ulsoor', pub: 'Watsons', who: 'Employee', scene: 'Technology', color: '#39FF14', opener: 'Hey, monitoring your discussion track here from Watsons node. What standard protocol layer are you building on?' },
+  { name: 'Ananya', role: 'Venture Partner', location: 'Koramangala', pub: 'Social', who: 'Investor', scene: 'Investment', color: '#FF3860', opener: 'Hi. Are you scaling seed stage validation structures or mapping expansion variables?' },
+  { name: 'Vikram', role: 'Growth Lead', location: 'HSR Layout', pub: 'The Byg Brewski', who: 'Entrepreneur', scene: 'Startups', color: '#FFD700', opener: 'Evaluating the exact unit validation parameters for our platform node tonight. Let\'s sync.' },
+  { name: 'Deepa', role: 'Product Lead', location: 'Whitefield', pub: 'Windmills Craftworks', who: 'Employee', scene: 'Business', color: '#A855F7', opener: 'Hi! Managing data flows over here. Let\'s discuss your pipeline architecture strategies.' },
+  { name: 'Rohan', role: 'UI Architect', location: 'Jayanagar', pub: 'Geist Brewing Co', who: 'Creator', scene: 'Open Table', color: '#F97316', opener: 'Hey. Sitting at the long open bench workspace. Swing around for a raw wire structure review.' },
+  { name: 'Sneha', role: 'Content Architect', location: 'BTM Layout', pub: 'Arbor Brewing Co', who: 'Creator', scene: 'Music', color: '#06B6D4', opener: 'Building a collective node mapping for immediate media operations deployment tonight.' },
+  { name: 'Kiran', role: 'Angel Investor', location: 'Sarjapur', pub: 'The Biere Club', who: 'Investor', scene: 'Investment', color: '#E11D48', opener: 'Reviewing deployment models across deeptech verticals. Drop your execution deck text here.' },
+  { name: 'Naina', role: 'Research Engineer', location: 'Yelahanka', pub: 'Pecos', who: 'Student', scene: 'Travel', color: '#10B981', opener: 'Mapping physical network behaviors across density clusters. What parameters are you tracking?' }
+];
+
+// ── NAVIGATION ENGINE ──
 function goto(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   window.scrollTo(0,0);
 }
 
-// ── LIVE COUNTER ANIMATION ──
+// ── DYNAMIC COUNTER DENSITY TRACKING ──
 function animCount(){
   const el = document.getElementById('live-n');
-  const target = S.liveCount;
   let c = parseInt(el.textContent);
-  const step = ()=>{
-    if(c<target){c++;el.textContent=c;setTimeout(step,40)}
-  };
-  step();
+  if(c < S.liveCount) { c++; el.textContent = c; setTimeout(animCount, 40); }
 }
 setInterval(()=>{
-  const delta = Math.random()<.6?1:-1;
-  S.liveCount = Math.max(30,Math.min(80,S.liveCount+delta));
+  const delta = Math.random() < .6 ? 1 : -1;
+  S.liveCount = Math.max(40, Math.min(95, S.liveCount + delta));
   animCount();
-  updateDashStats();
-},4500);
+},5000);
 
-// ── REG STEP 1 VALIDATION ──
+// ── REGISTRATION IDENTIFICATION HANDLERS ──
 function validateReg1(){
   let ok=true;
   const name=document.getElementById('reg-name').value.trim();
   const phone=document.getElementById('reg-phone').value.trim();
   const email=document.getElementById('reg-email').value.trim();
+  const termsChecked=document.getElementById('reg-terms').checked;
   const showErr=(id,msg,show)=>{const el=document.getElementById(id);el.textContent=msg;el.classList.toggle('show',show)};
-  if(!name){showErr('err-name','Enter your full name',true);ok=false}else showErr('err-name','',false);
-  if(!/^\d{10}$/.test(phone)){showErr('err-phone','Enter valid 10-digit number',true);ok=false}else showErr('err-phone','',false);
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('err-email','Enter valid email',true);ok=false}else showErr('err-email','',false);
+  
+  if(!name){showErr('err-name','Identity statement required.',true);ok=false}else showErr('err-name','',false);
+  if(!/^\d{10}$/.test(phone)){showErr('err-phone','Valid 10-digit telemetry required.',true);ok=false}else showErr('err-phone','',false);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('err-email','Valid corporate email anchor required.',true);ok=false}else showErr('err-email','',false);
+  
+  // Surgical Change: Hard Validation Interlock for Compliance Checkbox
+  if(!termsChecked){showErr('err-terms','You must accept the terms to unlock routing.',true);ok=false}else showErr('err-terms','',false);
+  
   if(!ok)return;
   S.name=name;S.phone=phone;S.email=email;
   document.getElementById('otp-phone-disp').textContent='+91 '+phone;
   goto('s-otp');
 }
 
-// ── OTP HANDLING ──
+// ── PIN AUTHENTICATION LAYER ──
 document.querySelectorAll('.otp-char').forEach((inp,i,arr)=>{
   inp.addEventListener('input',()=>{
     inp.value=inp.value.replace(/\D/g,'').slice(-1);
@@ -462,29 +520,35 @@ function verifyOTP(){
     document.getElementById('o1').focus();
   }
 }
-function resendOTP(){
-  ['o1','o2','o3','o4'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('o1').focus();
-  document.getElementById('otp-demo-hint').textContent='OTP resent · DEMO MODE · use 1234';
-}
 
-// ── WHO + SCENE ──
+// ── CUSTOM TEXT SELECTION OVERWRITE FLOWS ──
 let selWhoVal='', selSceneVal='';
 function selWho(btn){
+  document.getElementById('custom-who').value = '';
   document.querySelectorAll('.who-btn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');selWhoVal=btn.dataset.val;
 }
+function customWhoTyped(){
+  document.querySelectorAll('.who-btn').forEach(b=>b.classList.remove('sel'));
+  selWhoVal = document.getElementById('custom-who').value.trim();
+}
 function selScene(btn){
+  document.getElementById('custom-scene').value = '';
   document.querySelectorAll('.scene-btn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');selSceneVal=btn.dataset.val;
 }
+function customSceneTyped(){
+  document.querySelectorAll('.scene-btn').forEach(b=>b.classList.remove('sel'));
+  selSceneVal = document.getElementById('custom-scene').value.trim();
+}
 
-// ── ENTER DASHBOARD ──
+// ── COMPILING NETWORK AIRSPACE ──
 function enterDash(){
   if(!selWhoVal){document.getElementById('err-who').classList.add('show');return}
   document.getElementById('err-who').classList.remove('show');
   if(!selSceneVal){document.getElementById('err-scene').classList.add('show');return}
   document.getElementById('err-scene').classList.remove('show');
+  
   S.who=selWhoVal;S.scene=selSceneVal;
   goto('s-connect');
   runConnectAnim(()=>{
@@ -493,68 +557,64 @@ function enterDash(){
   });
 }
 
-const CONN_MSGS=['SCANNING VENUE','VERIFYING IDENTITY','JOINING NETWORK','ACTIVATING SESSION'];
+const CONN_MSGS=['ISOLATING PHONE DIGEST','VERIFYING IDENTITY MATRIX','MAPPING CITY CROSS-TALK','SYNCHRONIZING SECURE GRAPH'];
 function runConnectAnim(cb){
   let i=0;
   const el=document.getElementById('conn-msg');
   const iv=setInterval(()=>{
     el.textContent=CONN_MSGS[i]||CONN_MSGS[3];
     i++;
-    if(i>=CONN_MSGS.length){clearInterval(iv);setTimeout(cb,400)}
-  },600);
+    if(i>CONN_MSGS.length){clearInterval(iv);cb()}
+  },500);
 }
 
-// ── MEMBER DATA ──
-const NAMES=['Arjun Mehta','Priya Nair','Vikram Rao','Deepa Krishnan','Rohan Gupta','Naina Singh','Aditya Kumar','Sneha Patel','Kiran Reddy','Ananya Bose','Rahul Joshi','Pooja Iyer','Suresh Varma','Meera Das','Dinesh Chetty','Kavya Shah','Nikhil Pandey','Ritu Agarwal','Siddharth Menon','Lakshmi Nambiar'];
-const ROLES=['Founder, AI Startup','Product Manager','Software Engineer','Venture Partner','Marketing Lead','UX Designer','Backend Engineer','Sales Director','Angel Investor','Content Creator','DevOps Lead','Business Analyst','CTO','Data Scientist','Growth Hacker','Brand Strategist','Fullstack Dev','Finance Lead','Startup Advisor','Event Producer'];
-const COMPANIES=['Bengaluru','Koramangala','Indiranagar','HSR Layout','Whitefield','Jayanagar','BTM Layout','Marathahalli','Yelahanka','Sarjapur'];
-const WHO_OPTS=['Entrepreneur','Employee','Freelancer','Investor','Student','Creator'];
-const SCENE_OPTS=['Business','Startups','Investment','Technology','Travel','Food','Music','Sports','Open Table'];
-const COLORS=['#FF6900','#00E5FF','#39FF14','#FF3860','#FFD700','#A855F7','#F97316','#06B6D4'];
-
+// ── REAL-TIME MATRIX RECONCILIATION LOOP ──
 function buildDashboard(){
   S.members=[];
-  for(let i=0;i<18;i++){
+  PUBS_GRAPH_SEEDS.forEach((m, idx)=>{
     S.members.push({
-      id:i, name:NAMES[i%NAMES.length], role:ROLES[i%ROLES.length],
-      location:COMPANIES[i%COMPANIES.length],
-      who:WHO_OPTS[i%WHO_OPTS.length], scene:SCENE_OPTS[i%SCENE_OPTS.length],
-      color:COLORS[i%COLORS.length], connected:false,
-      initials:NAMES[i%NAMES.length].split(' ').map(n=>n[0]).join('')
+      id: idx, name: m.name, role: m.role, location: m.location,
+      pub: m.pub, who: m.who, scene: m.scene, color: m.color,
+      connected: false, opener: m.opener,
+      initials: m.name.substring(0,2).toUpperCase()
     });
-  }
-  // add self
+  });
+
+  S.members.sort((a, b) => {
+    if (a.scene.toUpperCase() === 'OPEN TABLE' && b.scene.toUpperCase() !== 'OPEN TABLE') return -1;
+    if (a.scene.toUpperCase() !== 'OPEN TABLE' && b.scene.toUpperCase() === 'OPEN TABLE') return 1;
+    return 0;
+  });
+
   document.getElementById('hud-user-name').textContent=S.name.toUpperCase();
-  const sceneEmojis={Business:'🤝',Startups:'🚀',Investment:'📈',Technology:'⚡',Travel:'✈️',Food:'🍔',Music:'🎵',Sports:'🏏','Open Table':'🪑'};
-  const em=sceneEmojis[S.scene]||'🎯';
-  document.getElementById('sb-emoji').textContent=em;
   document.getElementById('sb-label').textContent=S.scene.toUpperCase();
-  document.getElementById('hud-scene-badge').textContent=S.scene.toUpperCase();
+  document.getElementById('hud-scene-badge').textContent=S.scene.toUpperCase().substring(0,12);
+  
   renderMembers();
   buildFeed();
   updateDashStats();
-  startLiveFeed();
 }
 
 function renderMembers(){
   const list=document.getElementById('member-list');
   list.innerHTML='';
   S.members.forEach(m=>{
-    const sameScene=m.scene===S.scene;
+    const sameScene = m.scene.toUpperCase() === S.scene.toUpperCase();
+    const isPinned = m.scene.toUpperCase() === 'OPEN TABLE';
     const card=document.createElement('div');
-    card.className='member-card';
+    card.className=`member-card ${isPinned ? 'pinned' : ''}`;
     card.id='mc-'+m.id;
     card.innerHTML=`
       <div class="avatar" style="background:${m.color}22;color:${m.color};border:1px solid ${m.color}44">${m.initials}</div>
       <div class="member-info">
-        <div class="member-name">${m.name}</div>
-        <div class="member-role">${m.role} · ${m.location}</div>
+        <div class="member-name">${m.name} <span style="font-size:.55rem;font-weight:normal;color:#888">@ ${m.location}</span></div>
+        <div class="member-role">${m.role} · <span class="mc-o" style="padding:0 3px">${m.who}</span></div>
+        <div class="member-pub">${m.pub.toUpperCase()} NODE</div>
         <div class="member-meta">
-          <span class="meta-chip mc-o">${m.who}</span>
-          <span class="meta-chip ${sameScene?'mc-c':'mc-g'}">${sameScene?'SAME SCENE':m.scene}</span>
+          <span class="meta-chip ${isPinned ? 'mc-p' : sameScene ? 'mc-c' : 'mc-g'}">${isPinned ? '🪑 OPEN TABLE' : sameScene ? 'MATCHING TOPIC' : m.scene}</span>
         </div>
       </div>
-      <button class="connect-btn" onclick="triggerConnect(${m.id})" id="cb-${m.id}">CONNECT</button>
+      <button class="connect-btn" onclick="openChatPortal(${m.id})" id="cb-${m.id}">CONNECT</button>
     `;
     list.appendChild(card);
   });
@@ -563,69 +623,136 @@ function renderMembers(){
 function updateDashStats(){
   document.getElementById('d-total').textContent=S.liveCount;
   document.getElementById('d-conns').textContent=S.connections;
-  const sameCount=S.members.filter(m=>m.scene===S.scene&&!m.connected).length;
+  const sameCount=S.members.filter(m=>m.scene.toUpperCase()===S.scene.toUpperCase()&&!m.connected).length;
   document.getElementById('d-scene-count').textContent=sameCount;
 }
 
-// ── CONNECT FLOW ──
-function triggerConnect(id){
-  const m=S.members.find(x=>x.id===id);
-  if(!m||m.connected)return;
-  const modal=document.getElementById('conn-modal');
-  modal.classList.add('show');
-  document.getElementById('modal-success').style.display='none';
-  const steps=['ps1','ps2','ps3','ps4'];
-  steps.forEach(s=>{const el=document.getElementById(s);el.classList.remove('active','done')});
-  document.getElementById('modal-steps').style.display='flex';
-  let i=0;
-  const next=()=>{
-    if(i>0)document.getElementById(steps[i-1]).className='prog-step done';
-    if(i<steps.length){
-      document.getElementById(steps[i]).className='prog-step active';
-      i++;setTimeout(next,700);
-    } else {
-      m.connected=true;S.connections++;
-      document.getElementById('modal-steps').style.display='none';
-      const succ=document.getElementById('modal-success');
-      succ.style.display='block';
-      document.getElementById('modal-success-name').textContent='You are now connected with '+m.name+' · Verified at '+VENUE_CONFIG.name;
-      document.getElementById('cb-'+id).textContent='CONNECTED';
-      document.getElementById('cb-'+id).className='connect-btn done';
-      updateDashStats();
-      addFeedItem(S.name.split(' ')[0]+' connected with <b>'+m.name+'</b>');
-      setTimeout(()=>closeModal(),2200);
-    }
-  };
-  next();
-}
-function closeModal(){
-  document.getElementById('conn-modal').classList.remove('show');
+// ── DYNAMIC 1-ON-1 INTERACTION LOGIC LOOP ──
+function openChatPortal(id){
+  const m = S.members.find(x=>x.id===id);
+  if(!m) return;
+  S.activeChatMemberId = id;
+  
+  document.getElementById('chat-modal-title').textContent = `SECURE COMMUNICATIONS WITH ${m.name.toUpperCase()}`;
+  const box = document.getElementById('chat-box');
+  box.innerHTML = '';
+  
+  const sysMsg = document.createElement('div');
+  sysMsg.className = 'chat-msg sys';
+  sysMsg.innerHTML = `[ POSITION PAIR LINK ENCRYPTED ]<br>Handshake request mapping: ${m.pub.toUpperCase()} -> TOIT INDIRANAGAR`;
+  box.appendChild(sysMsg);
+  
+  setTimeout(() => {
+    const themMsg = document.createElement('div');
+    themMsg.className = 'chat-msg them';
+    themMsg.innerHTML = `<b>${m.name}:</b> ${m.opener}`;
+    box.appendChild(themMsg);
+    box.scrollTop = box.scrollHeight;
+  }, 400);
+
+  if(m.connected){
+    document.getElementById('chat-input-area').style.display = 'none';
+    const lockedMsg = document.createElement('div');
+    lockedMsg.className = 'chat-msg sys';
+    lockedMsg.textContent = '[ HANDSHAKE LOCKED INTO THE ACTIVE SUMMARY BUFFER ]';
+    box.appendChild(lockedMsg);
+  } else {
+    document.getElementById('chat-input-area').style.display = 'flex';
+  }
+
+  document.getElementById('conn-modal').classList.add('show');
 }
 
-// ── LIVE FEED ──
-const FEED_TEMPLATES=[
-  ()=>`${pickRand(NAMES).split(' ')[0]} just checked in · <b>${pickRand(WHO_OPTS)}</b>`,
-  ()=>`${pickRand(NAMES).split(' ')[0]} is here for <b>${pickRand(SCENE_OPTS)}</b>`,
-  ()=>`New <b>${pickRand(WHO_OPTS)}</b> joined the room`,
-  ()=>`${pickRand(NAMES).split(' ')[0]} opened an <b>Open Table</b>`,
-  ()=>`${pickRand(NAMES).split(' ')[0]} connected with <b>${pickRand(NAMES).split(' ')[0]}</b>`,
-];
-function pickRand(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function sendMyMessage(){
+  const input = document.getElementById('chat-typed-msg');
+  const txt = input.value.trim();
+  if(!txt) return;
+  
+  const box = document.getElementById('chat-box');
+  const msg = document.createElement('div');
+  msg.className = 'chat-msg me';
+  msg.innerHTML = `<b>You:</b> ${txt}`;
+  box.appendChild(msg);
+  input.value = '';
+  box.scrollTop = box.scrollHeight;
+  
+  const targetId = S.activeChatMemberId;
+  const m = S.members.find(x=>x.id===targetId);
+  
+  setTimeout(()=>{
+    const finalSys = document.createElement('div');
+    finalSys.className = 'chat-msg sys';
+    finalSys.innerHTML = `✓ DATA HANDSHAKE RECIPROCATED<br><small>Pair confirmed. Exchange records added to exit ledger compilation.</small>`;
+    box.appendChild(finalSys);
+    box.scrollTop = box.scrollHeight;
+    
+    if(!m.connected){
+      m.connected = true;
+      S.connections++;
+      document.getElementById('cb-'+targetId).textContent = 'CONNECTED';
+      document.getElementById('cb-'+targetId).className = 'connect-btn done';
+      updateDashStats();
+      addFeedItem(`Handshake committed between your node and <b>${m.name}</b>`);
+    }
+    
+    setTimeout(() => { closeModal(); }, 1600);
+  }, 700);
+}
+
+function closeModal(){ document.getElementById('conn-modal').classList.remove('show'); }
+
+// ── AUDIT EVENT LOOPS ──
 function addFeedItem(html){
   const list=document.getElementById('feed-list');
   const item=document.createElement('div');
   item.className='feed-item';
   item.innerHTML=`<div class="feed-dot"></div><span>${html}</span>`;
   list.insertBefore(item,list.firstChild);
-  while(list.children.length>8)list.removeChild(list.lastChild);
+  while(list.children.length>5)list.removeChild(list.lastChild);
 }
 function buildFeed(){
-  for(let i=0;i<5;i++) addFeedItem(pickRand(FEED_TEMPLATES)());
+  addFeedItem(`Cross-talk telemetry routing active across 10 hubs.`);
+  addFeedItem(`<b>Bharath</b> initialized session via TOIT Indiranagar node.`);
+  addFeedItem(`<b>Bholey</b> matching active discussion loops from TAG area.`);
+  addFeedItem(`<b>Puneet</b> connected via Watsons location routing maps.`);
 }
-function startLiveFeed(){
-  setInterval(()=>{
-    if(Math.random()>.4) addFeedItem(pickRand(FEED_TEMPLATES)());
-  },5000);
+
+// ── TERMINAL EXIT AND DPDP EXPUNGE SIMULATION ──
+function triggerExitVenue(){
+  if(confirm("Confirm venue platform log-off? Your active tracking signature will be wiped from live dashboard grids under DPDPAct rules.")){
+    
+    document.getElementById('hud-stat-bar').className = "stat-row frozen";
+    document.getElementById('hud-dash-body').className = "dash-body frozen";
+    document.getElementById('exit-action-trigger').disabled = true;
+    document.getElementById('exit-action-trigger').textContent = "EXPUNGING TELEMETRY CACHES...";
+
+    setTimeout(() => {
+      document.getElementById('em-meta-to').innerHTML = `<b>To:</b> ${S.email}`;
+      document.getElementById('em-user-name').textContent = S.name;
+      
+      const container = document.getElementById('em-logs-container');
+      container.innerHTML = '';
+      
+      const connectedMembers = S.members.filter(m => m.connected);
+      
+      if(connectedMembers.length === 0){
+        container.innerHTML = `<p style="font-size: .8rem; color: #888; font-style: italic; padding: 1rem 0;">No mutual handshakes were committed during this point-of-presence session window.</p>`;
+      } else {
+        connectedMembers.forEach(m => {
+          const block = document.createElement('div');
+          block.className = 'handshake-block';
+          block.innerHTML = `
+            <div class="handshake-title">${m.name} · ${m.role}</div>
+            <div style="font-size: .75rem; margin-top: .2rem"><b>Verified Node Source:</b> ${m.pub.toUpperCase()} (${m.location})</div>
+            <div style="font-size: .75rem; color: #555; margin-top: .1rem"><b>Discussion Topic:</b> ${m.scene} | <b>DPDP Protocol Status:</b> Sanitized & Sealed</div>
+          `;
+          container.appendChild(block);
+        });
+      }
+      
+      goto('s-email');
+    }, 1200);
+  }
 }
 </script>
 </body>
