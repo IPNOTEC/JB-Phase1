@@ -298,6 +298,40 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh;bac
 .new-session-btn{width:100%;background:transparent;color:var(--c);font-family:var(--fh);font-size:.62rem;font-weight:700;letter-spacing:2px;padding:.85rem;border:1px solid rgba(0,229,255,.25);border-radius:8px;cursor:pointer;transition:all .2s;margin-top:1.25rem}
 .new-session-btn:hover{background:rgba(0,229,255,.05)}
 
+/* REPORT BUTTON & MODAL */
+.report-btn{background:none;border:none;color:#555;font-family:var(--fb);font-size:.58rem;letter-spacing:1px;cursor:pointer;padding:.25rem .5rem;border-radius:4px;transition:color .2s}
+.report-btn:hover{color:#ff3355}
+.report-sheet{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:600;display:flex;align-items:flex-end;justify-content:center}
+.report-sheet.hidden{display:none}
+.report-card{background:var(--bg2);border:1px solid rgba(255,45,120,.25);border-radius:14px 14px 0 0;width:100%;max-width:480px;padding:1.5rem}
+.report-card-title{font-family:var(--fh);font-size:.65rem;color:#fff;letter-spacing:1px;margin-bottom:.35rem}
+.report-card-sub{font-size:.6rem;color:#555;margin-bottom:1.1rem;line-height:1.5}
+.report-reason{width:100%;background:var(--bg3);border:1px solid var(--border);color:#ccc;font-family:var(--fb);font-size:.72rem;padding:.75rem 1rem;border-radius:8px;text-align:left;cursor:pointer;margin-bottom:.4rem;transition:all .2s;display:flex;align-items:center;gap:.6rem}
+.report-reason:hover{border-color:rgba(255,45,120,.4);color:#fff}
+.report-reason .rr-dot{width:6px;height:6px;border-radius:50%;background:var(--pk);flex-shrink:0}
+.report-cancel{width:100%;background:transparent;border:1px solid var(--border);color:#555;font-family:var(--fh);font-size:.6rem;letter-spacing:1px;padding:.75rem;border-radius:8px;cursor:pointer;margin-top:.5rem;transition:all .2s}
+.report-cancel:hover{color:#fff}
+.report-toast{position:fixed;top:1.2rem;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid rgba(57,255,20,.3);color:var(--g);font-family:var(--fb);font-size:.65rem;letter-spacing:1px;padding:.55rem 1.1rem;border-radius:20px;z-index:700;opacity:0;transition:opacity .3s;pointer-events:none}
+.report-toast.show{opacity:1}
+/* AI INSIGHT CARD */
+.ai-insight{background:linear-gradient(135deg,#0d0820,#0a1020);border:1px solid rgba(191,95,255,.25);border-radius:0 0 10px 10px;padding:.9rem 1rem}
+.ai-insight-label{font-size:.52rem;letter-spacing:2px;color:var(--purp);font-family:var(--fb);text-transform:uppercase;margin-bottom:.65rem;display:flex;align-items:center;gap:.4rem}
+.ai-insight-label::before{content:'✦';font-size:.6rem}
+.ai-insight-loading{font-size:.65rem;color:#555;font-family:var(--fb);display:flex;align-items:center;gap:.5rem;padding:.25rem 0}
+.ai-insight-loading .spin-xs{width:12px;height:12px;border-radius:50%;border:1.5px solid #333;border-top-color:var(--purp);animation:spin .8s linear infinite;flex-shrink:0}
+.ai-metric-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.65rem}
+.ai-metric{background:rgba(191,95,255,.06);border:1px solid rgba(191,95,255,.15);border-radius:6px;padding:.55rem .7rem}
+.ai-metric .am-label{font-size:.5rem;letter-spacing:1.5px;color:#666;text-transform:uppercase;font-family:var(--fb);margin-bottom:.2rem}
+.ai-metric .am-val{font-family:var(--fh);font-size:.78rem;color:var(--purp)}
+.ai-metric .am-val.green{color:var(--g)}
+.ai-interests{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.65rem}
+.ai-interest-chip{background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.2);color:var(--c);font-size:.55rem;padding:.2rem .5rem;border-radius:20px;font-family:var(--fb);letter-spacing:.5px}
+.ai-next-step{background:rgba(255,45,120,.06);border-left:2px solid var(--pk);padding:.55rem .75rem;border-radius:0 6px 6px 0;margin-bottom:.55rem}
+.ai-next-step .ans-label{font-size:.5rem;letter-spacing:1.5px;color:var(--pk);font-family:var(--fb);text-transform:uppercase;margin-bottom:.2rem}
+.ai-next-step .ans-text{font-size:.68rem;color:#ccc;line-height:1.5;font-family:var(--fb)}
+.ai-value-ex{background:rgba(57,255,20,.04);border-left:2px solid var(--g);padding:.55rem .75rem;border-radius:0 6px 6px 0}
+.ai-value-ex .ave-label{font-size:.5rem;letter-spacing:1.5px;color:var(--g);font-family:var(--fb);text-transform:uppercase;margin-bottom:.2rem}
+.ai-value-ex .ave-text{font-size:.68rem;color:#aaa;line-height:1.5;font-family:var(--fb)}
 @media(max-width:380px){
   .scan-big{font-size:2.1rem}
   .who-grid{grid-template-columns:1fr 1fr}
@@ -424,12 +458,22 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh;bac
     <div class="inp-grp">
       <span class="label">work email</span>
       <input class="inp" id="reg-email" type="email" placeholder="you@company.com"/>
-      <span class="sub-label">📧 your night recap gets mailed here when you bounce</span>
+      <span class="sub-label">📧 your recap gets mailed here when you bounce</span>
       <div class="err" id="err-email">that email doesn't look right</div>
     </div>
-    <div class="terms-box">
-      <input type="checkbox" id="reg-terms"/>
-      <div class="terms-text">i agree to the <b>DPDP framework</b> · my number is for OTP only · my bar credit is tied to this session and emailed at exit</div>
+    <div class="terms-box" style="flex-direction:column;gap:.65rem">
+      <div style="font-size:.65rem;font-weight:700;color:#111;font-family:'JetBrains Mono',monospace;letter-spacing:.5px">JOBZ.BAR community standards</div>
+      <ul style="font-size:.62rem;font-family:'JetBrains Mono',monospace;line-height:1.8;color:#333;padding-left:1rem;margin:0">
+        <li>professional networking environment — keep it real</li>
+        <li>no harassment, hate speech, or abusive behaviour</li>
+        <li>no political campaigning or religious debates</li>
+        <li>no solicitation, spam, or unsolicited pitching</li>
+        <li>respect the venue, the staff, and each other</li>
+      </ul>
+      <div style="display:flex;align-items:flex-start;gap:.6rem;padding-top:.3rem;border-top:1px solid #eee">
+        <input type="checkbox" id="reg-terms" style="margin-top:.2rem;cursor:pointer;accent-color:#FF2D78"/>
+        <div class="terms-text">i agree to the community standards &amp; <b>DPDP framework</b> · my number is for OTP only · my bar credit is tied to this session and emailed at exit</div>
+      </div>
     </div>
     <div class="err" id="err-terms">gotta tick this to continue</div>
   </div>
@@ -556,6 +600,7 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh;bac
         <div class="ch-sub" id="ch-sub">—</div>
       </div>
       <div class="ch-actions">
+        <button class="report-btn" onclick="openReportSheet()">⚠️ report</button>
         <button class="ch-min" onclick="minimiseTray()">—</button>
         <button class="ch-min" onclick="closeTray()" style="color:#ff3355">✕</button>
       </div>
@@ -571,7 +616,22 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100svh;bac
   </div>
 </div>
 
-<!-- EXIT MODAL -->
+<!-- REPORT SHEET -->
+<div class="report-sheet hidden" id="report-sheet" onclick="closeReportSheet(event)">
+  <div class="report-card" onclick="event.stopPropagation()">
+    <div class="report-card-title">report this user</div>
+    <div class="report-card-sub">this report goes directly to JOBZ.BAR moderators · three-strike system applies · we review within 24hrs</div>
+    <button class="report-reason" onclick="submitReport('Spam')"><span class="rr-dot"></span>Spam or unsolicited pitching</button>
+    <button class="report-reason" onclick="submitReport('Abuse')"><span class="rr-dot"></span>Abusive or threatening language</button>
+    <button class="report-reason" onclick="submitReport('Harassment')"><span class="rr-dot"></span>Harassment or unwanted contact</button>
+    <button class="report-reason" onclick="submitReport('Inappropriate')"><span class="rr-dot"></span>Inappropriate content</button>
+    <button class="report-reason" onclick="submitReport('Other')"><span class="rr-dot"></span>Other</button>
+    <button class="report-cancel" onclick="closeReportSheet()">cancel</button>
+  </div>
+</div>
+
+<!-- REPORT TOAST -->
+<div class="report-toast" id="report-toast">✓ report submitted · moderators notified</div>
 <div id="exit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center;padding:1.5rem">
   <div style="background:var(--bg2);border:1px solid rgba(255,45,120,.3);border-radius:12px;padding:1.75rem 1.5rem;width:100%;max-width:340px;text-align:center">
     <div style="font-size:2rem;margin-bottom:.75rem">✌️</div>
@@ -1141,7 +1201,8 @@ function confirmExit() {
   document.getElementById('hud-dash-body').className = 'dash-body frozen';
   const btn = document.getElementById('exit-action-trigger');
   btn.disabled = true; btn.textContent = 'wrapping up... ✨';
-  closeTray();
+  /* Hide tray visually but DO NOT wipe S.chats — recap needs the data */
+  document.getElementById('chat-tray').style.display = 'none';
   buildEmailRecap();
   setTimeout(() => goto('s-email'), 1100);
 }
@@ -1220,22 +1281,22 @@ function buildEmailRecap() {
     const myFirstName = (S.name || 'You').split(' ')[0];
     const topicLine   = TOPIC_SUMMARY[m.who] || 'had a good conversation and explored potential collaboration';
 
-    /* Smart summary based on depth */
+    /* Smart static fallback summary */
     let summaryText = '';
     if (msgCount >= 8) {
       summaryText = `Deep conversation. ${topicLine}. ${isConnected ? 'Confirmed connect — follow-up recommended.' : 'Strong engagement — worth reaching out.'}`;
     } else if (msgCount >= 4) {
       summaryText = `Good exchange. ${topicLine}. ${isConnected ? 'Marked as connected.' : 'Left open — worth following up.'}`;
     } else {
-      summaryText = `Brief intro. Initial contact made. ${isConnected ? 'Marked connected.' : 'Conversation started but not concluded — worth revisiting.'}`;
+      summaryText = `Brief intro. Initial contact made. ${isConnected ? 'Marked connected.' : 'Conversation started — worth revisiting.'}`;
     }
 
-    /* Build transcript rows — plain text, no HTML parsing needed */
+    /* Build transcript rows */
     const transcriptRows = realMsgs.map(msg => {
-      const isMe      = msg.type === 'me';
-      const speaker   = isMe ? myFirstName : m.name;
-      const rowClass  = isMe ? 'row-me' : 'row-them';
-      const safeText  = msg.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const isMe     = msg.type === 'me';
+      const speaker  = isMe ? myFirstName : m.name;
+      const rowClass = isMe ? 'row-me' : 'row-them';
+      const safeText = msg.text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       return `<div class="em-msg-row ${rowClass}">
         <span class="spk">${speaker}:</span>
         <span class="bubble">${safeText}</span>
@@ -1243,9 +1304,12 @@ function buildEmailRecap() {
     }).join('');
 
     /* First/last message times */
-    const firstTs = realMsgs[0].ts ? new Date(realMsgs[0].ts).toLocaleTimeString('en-IN', timeOpts) : '';
-    const lastTs  = realMsgs[realMsgs.length - 1].ts ? new Date(realMsgs[realMsgs.length - 1].ts).toLocaleTimeString('en-IN', timeOpts) : '';
+    const firstTs   = realMsgs[0].ts ? new Date(realMsgs[0].ts).toLocaleTimeString('en-IN', timeOpts) : '';
+    const lastTs    = realMsgs[realMsgs.length - 1].ts ? new Date(realMsgs[realMsgs.length - 1].ts).toLocaleTimeString('en-IN', timeOpts) : '';
     const timeRange = firstTs && lastTs && firstTs !== lastTs ? `${firstTs} – ${lastTs}` : firstTs;
+
+    /* Unique ID for AI insight container */
+    const aiId = `ai-insight-${id}`;
 
     const block = document.createElement('div');
     block.className = 'em-convo';
@@ -1269,9 +1333,179 @@ function buildEmailRecap() {
       <div class="em-summary-box">
         <div class="em-summary-label">summary</div>
         <div class="em-summary-text">${summaryText}</div>
+      </div>
+      <div class="ai-insight" id="${aiId}">
+        <div class="ai-insight-label">AI networking insights</div>
+        <div class="ai-insight-loading"><div class="spin-xs"></div><span style="font-size:.62rem;color:#555">analysing conversation...</span></div>
       </div>`;
     container.appendChild(block);
+
+    /* Fire AI insight async — non-blocking */
+    buildAIInsight(id, m, realMsgs, myFirstName, isConnected, aiId);
   });
+}
+
+/* ═══════════════════════════════════════════
+   AI INSIGHT ENGINE — Anthropic API per convo
+═══════════════════════════════════════════ */
+async function buildAIInsight(id, m, realMsgs, myName, isConnected, containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+
+  /* Build transcript string for prompt */
+  const transcript = realMsgs.map(msg => {
+    const speaker = msg.type === 'me' ? myName : m.name;
+    return `${speaker}: ${msg.text}`;
+  }).join('\n');
+
+  const prompt = `You are an AI networking analyst for JOBZ.BAR, a professional IRL networking platform in Bengaluru.
+
+Analyse this conversation between ${myName} (${S.who || 'Professional'}, interested in ${S.scene || 'Networking'}) and ${m.name} (${m.who}, interested in ${m.scene}). They met at ${m.pub}, ${m.location}.
+
+TRANSCRIPT:
+${transcript}
+
+CONNECTION STATUS: ${isConnected ? 'Connected' : 'Partial / Not connected'}
+
+Return ONLY a valid JSON object with exactly these fields — no markdown, no explanation, just raw JSON:
+{
+  "quality": "High" or "Medium" or "Low",
+  "score": number between 0 and 100,
+  "interests": array of 2-4 short strings (common interests or synergies identified),
+  "nextStep": one sentence recommended action,
+  "valueExchange": one sentence describing the potential value both parties can exchange
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const raw  = (data.content || []).map(b => b.text || '').join('').trim();
+
+    /* Strip any accidental markdown fences */
+    const clean = raw.replace(/```json|```/gi, '').trim();
+    const insight = JSON.parse(clean);
+
+    renderAIInsight(el, insight);
+  } catch (e) {
+    /* Graceful fallback — never break the email */
+    renderAIInsightFallback(el, realMsgs.length, isConnected);
+  }
+}
+
+function renderAIInsight(el, insight) {
+  const qualityColor = insight.quality === 'High' ? 'var(--g)' : insight.quality === 'Medium' ? 'var(--y)' : '#ff3355';
+  const scoreColor   = insight.score >= 70 ? 'green' : '';
+  const interestChips = (insight.interests || []).map(i =>
+    `<span class="ai-interest-chip">${i}</span>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="ai-insight-label">AI networking insights</div>
+    <div class="ai-metric-row">
+      <div class="ai-metric">
+        <div class="am-label">conversation quality</div>
+        <div class="am-val" style="color:${qualityColor}">${insight.quality || '—'}</div>
+      </div>
+      <div class="ai-metric">
+        <div class="am-label">collaboration score</div>
+        <div class="am-val ${scoreColor}">${insight.score != null ? insight.score + '%' : '—'}</div>
+      </div>
+    </div>
+    ${interestChips ? `<div class="ai-insight-label" style="font-size:.5rem;margin-bottom:.4rem">common interests identified</div><div class="ai-interests">${interestChips}</div>` : ''}
+    <div class="ai-next-step">
+      <div class="ans-label">suggested next step</div>
+      <div class="ans-text">${insight.nextStep || '—'}</div>
+    </div>
+    <div class="ai-value-ex">
+      <div class="ave-label">potential value exchange</div>
+      <div class="ave-text">${insight.valueExchange || '—'}</div>
+    </div>`;
+}
+
+function renderAIInsightFallback(el, msgCount, isConnected) {
+  const score = isConnected ? (msgCount >= 8 ? 78 : 55) : 32;
+  el.innerHTML = `
+    <div class="ai-insight-label">AI networking insights</div>
+    <div class="ai-metric-row">
+      <div class="ai-metric">
+        <div class="am-label">conversation quality</div>
+        <div class="am-val" style="color:${msgCount >= 6 ? 'var(--g)' : 'var(--y)'}">${msgCount >= 6 ? 'High' : 'Medium'}</div>
+      </div>
+      <div class="ai-metric">
+        <div class="am-label">collaboration score</div>
+        <div class="am-val ${score >= 70 ? 'green' : ''}">${score}%</div>
+      </div>
+    </div>
+    <div class="ai-next-step">
+      <div class="ans-label">suggested next step</div>
+      <div class="ans-text">${isConnected ? 'Follow up within 48 hours while the conversation is fresh — send a LinkedIn request with a short note referencing tonight.' : 'Reach out on LinkedIn with context from tonight — timing matters while the memory is live.'}</div>
+    </div>
+    <div class="ai-value-ex">
+      <div class="ave-label">potential value exchange</div>
+      <div class="ave-text">Based on your personas and topics, there may be complementary skills or networks worth exploring in a follow-up conversation.</div>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   REPORT SYSTEM
+═══════════════════════════════════════════ */
+function openReportSheet() {
+  document.getElementById('report-sheet').classList.remove('hidden');
+}
+function closeReportSheet(e) {
+  if (!e || e.target === document.getElementById('report-sheet')) {
+    document.getElementById('report-sheet').classList.add('hidden');
+  }
+}
+function submitReport(reason) {
+  const reportedId = S.activeChat;
+  document.getElementById('report-sheet').classList.add('hidden');
+
+  /* Close and wipe this specific chat */
+  if (reportedId != null) {
+    delete S.chats[reportedId];
+    S.activeChat = null;
+
+    /* Remove member card from dashboard */
+    const card = document.getElementById('mc-' + reportedId);
+    if (card) card.remove();
+
+    /* Remove member from S.members so they don't reappear */
+    const memberIdx = S.members.findIndex(m => m.id == reportedId);
+    const memberName = memberIdx !== -1 ? S.members[memberIdx].name : 'User';
+    if (memberIdx !== -1) S.members.splice(memberIdx, 1);
+
+    /* Re-render tray without this chat */
+    renderTray();
+    const remaining = Object.keys(S.chats);
+    if (remaining.length) {
+      S.activeChat = remaining[remaining.length - 1];
+      renderChatWindow(S.activeChat);
+      document.getElementById('chat-window').classList.remove('minimised');
+    } else {
+      document.getElementById('chat-tray').style.display = 'none';
+    }
+
+    updateDashStats();
+    addFeed(`⚠️ <b>${memberName}</b> reported for ${reason} · under review`);
+  }
+
+  /* Toast */
+  const toast = document.getElementById('report-toast');
+  toast.textContent = `✓ "${reason}" report submitted · ${reportedId != null ? 'user removed from your session' : 'moderators notified'}`;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3800);
+
+  console.log('[JOBZBAR REPORT] ' + JSON.stringify({ reason, reportedMember: reportedId, ts: new Date().toISOString() }, null, 2));
 }
 
 /* ═══════════════════════════════════════════
