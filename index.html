@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>JOBZ.BAR · Bengaluru · Frosted Glass Edition</title>
 <meta name="description" content="JOBZ.BAR — IRL networking bar OS. Scan in, pay once, meet verified humans, walk out with an AI recap."/>
 <meta name="theme-color" content="#05060F"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 /* =====================================================
    ROOT — PINGG DARK GLASS SYSTEM (JOBZ.BAR EDITION)
@@ -33,6 +33,7 @@
   --fh:'Silkscreen','Share Tech Mono',monospace;
   --fm:'Share Tech Mono',ui-monospace,monospace;
   --fb:'Share Tech Mono',ui-monospace,monospace;
+  --fc:'JetBrains Mono','Share Tech Mono',ui-monospace,monospace;
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -1880,9 +1881,9 @@ body,input,textarea,button,select{font-family:var(--fb);letter-spacing:.2px}
   </div>
   <!-- CTRL ROW — PINGG style -->
   <div class="ctrl-row">
-    <div class="cr-btn" onclick="clearFeed()">⊘ CLR FEED</div>
-    <div class="cr-btn" onclick="showVenueStats()">◈ STATS</div>
-    <div class="cr-btn" onclick="pingRoom()">⚡ PING</div>
+    <div class="cr-btn" id="vibe-btn" onclick="toggleSameVibe()">◎ SAME VIBE</div>
+    <div class="cr-btn" onclick="openStatsModal()">◈ STATS</div>
+    <div class="cr-btn" id="filter-btn" onclick="openFilterModal()">⚙ FILTERS</div>
     <div class="cr-btn exit-act" onclick="triggerExitVenue()">⏻ EXIT SESSION</div>
   </div>
   <div class="dash-body" id="hud-dash-body">
@@ -1909,13 +1910,13 @@ body,input,textarea,button,select{font-family:var(--fb);letter-spacing:.2px}
       </div>
       <div class="ch-actions">
         <button style="background:none;border:none;color:rgba(255,255,255,0.28);font-family:var(--fm);font-size:.54rem;letter-spacing:1px;cursor:pointer;padding:.2rem .5rem;border-radius:4px;transition:color .2s" onclick="openReportSheet()" onmouseover="this.style.color='#ff1744'" onmouseout="this.style.color='rgba(255,255,255,0.28)'">⚠️ report</button>
-        <button class="flip-btn" id="flip-btn" onclick="flipChat()">FLIP</button>
-        <button class="ch-min" onclick="minimiseTray()">—</button>
+        <button class="ch-min" id="ch-min-btn" onclick="minimiseTray()">—</button>
         <button class="ch-min" onclick="closeTray()" style="color:rgba(255,23,68,0.6)">✕</button>
       </div>
     </div>
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="chat-input-row" id="chat-input-row">
+      <button class="flip-btn" id="flip-btn" onclick="flipChat()" title="chat skin">NEON</button>
       <input class="inp" id="chat-inp" placeholder="transmit..." style="flex:1"/>
       <button class="send-btn" onclick="sendMsg()">↑</button>
     </div>
@@ -2109,34 +2110,40 @@ const DEFAULT_CONV=["hey! good to see you here tonight 👋 what brings you to J
    SEEDS — with VIBGYOR colors assigned
 ===================================================== */
 const SEEDS=[
-  {name:'Bharath', role:'Founder / CEO',        location:'Indiranagar', pub:'TOIT',        who:'Entrepreneur', scene:'Business',    clrIdx:0},
-  {name:'Bholey',  role:'AI Architect',          location:'Devanahalli', pub:'TAG',         who:'Freelancer',   scene:'Technology',  clrIdx:2},
-  {name:'Puneet',  role:'Dev Lead',              location:'Ulsoor',      pub:'Watsons',     who:'Employee',     scene:'Technology',  clrIdx:3},
-  {name:'Ananya',  role:'Venture Partner',       location:'Koramangala', pub:'Social',      who:'Investor',     scene:'Investment',  clrIdx:4},
-  {name:'Vikram',  role:'Growth Lead',           location:'HSR Layout',  pub:'Byg Brewski', who:'Entrepreneur', scene:'Startups',    clrIdx:5},
-  {name:'Deepa',   role:'Product Lead',          location:'Whitefield',  pub:'Windmills',   who:'Employee',     scene:'Business',    clrIdx:6},
-  {name:'Rohan',   role:'UI Architect',          location:'Jayanagar',   pub:'Geist',       who:'Creator',      scene:'Open Table',  clrIdx:7},
-  {name:'Sneha',   role:'Content Architect',     location:'BTM Layout',  pub:'Arbor',       who:'Creator',      scene:'Music',       clrIdx:8},
-  {name:'Kiran',   role:'Angel Investor',        location:'Sarjapur',    pub:'Biere Club',  who:'Investor',     scene:'Investment',  clrIdx:1},
-  {name:'Naina',   role:'Research Engineer',     location:'Yelahanka',   pub:'Pecos',       who:'Student',      scene:'Travel',      clrIdx:9}
+  {name:'Bharath', role:'Founder / CEO',      location:'Indiranagar', pub:'TOIT',        city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Entrepreneur', scene:'Business',   clrIdx:0},
+  {name:'Meera',   role:'Seed Fund Scout',     location:'Indiranagar', pub:'TOIT',        city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Investor',     scene:'Investment', clrIdx:4},
+  {name:'Arjun',   role:'Solo Founder',        location:'Indiranagar', pub:'TOIT',        city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Entrepreneur', scene:'Startups',   clrIdx:6},
+  {name:'Tara',    role:'Brand Filmmaker',     location:'Indiranagar', pub:'TOIT',        city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Creator',      scene:'Music',      clrIdx:8},
+  {name:'Zoya',    role:'Backend Engineer',    location:'Indiranagar', pub:'TOIT',        city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Employee',     scene:'Technology', clrIdx:2},
+  {name:'Rahul',   role:'CS Final Year',       location:'Indiranagar', pub:'TOIT',        city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Student',      scene:'Open Table', clrIdx:3},
+  {name:'Bholey',  role:'AI Architect',        location:'Devanahalli', pub:'TAG',         city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Freelancer',   scene:'Technology', clrIdx:2},
+  {name:'Puneet',  role:'Dev Lead',            location:'Ulsoor',      pub:'Watsons',     city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Employee',     scene:'Technology', clrIdx:3},
+  {name:'Ananya',  role:'Venture Partner',     location:'Koramangala', pub:'Social',      city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Investor',     scene:'Investment', clrIdx:4},
+  {name:'Vikram',  role:'Growth Lead',         location:'HSR Layout',  pub:'Byg Brewski', city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Entrepreneur', scene:'Startups',   clrIdx:5},
+  {name:'Deepa',   role:'Product Lead',        location:'Whitefield',  pub:'Windmills',   city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Employee',     scene:'Business',   clrIdx:6},
+  {name:'Rohan',   role:'UI Architect',        location:'Jayanagar',   pub:'Geist',       city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Creator',      scene:'Open Table', clrIdx:7},
+  {name:'Sneha',   role:'Content Architect',   location:'BTM Layout',  pub:'Arbor',       city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Creator',      scene:'Music',      clrIdx:8},
+  {name:'Kiran',   role:'Angel Investor',      location:'Sarjapur',    pub:'Biere Club',  city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Investor',     scene:'Investment', clrIdx:1},
+  {name:'Naina',   role:'Research Engineer',   location:'Yelahanka',   pub:'Pecos',       city:'Bengaluru', country:'IN', flag:'\ud83c\uddee\ud83c\uddf3', who:'Student',      scene:'Travel',     clrIdx:9},
+  {name:'Aisha',   role:'Fintech Founder',     location:'DIFC',        pub:'Lock Stock',  city:'Dubai',     country:'AE', flag:'\ud83c\udde6\ud83c\uddea', who:'Entrepreneur', scene:'Startups',   clrIdx:5},
+  {name:'Marcus',  role:'Seed Investor',       location:'SoMa',        pub:'Zeitgeist',   city:'San Francisco', country:'US', flag:'\ud83c\uddfa\ud83c\uddf8', who:'Investor',  scene:'Investment', clrIdx:3},
+  {name:'Yuki',    role:'Robotics Lead',       location:'Shibuya',     pub:'Craft Beer M',city:'Tokyo',     country:'JP', flag:'\ud83c\uddef\ud83c\uddf5', who:'Employee',     scene:'Technology', clrIdx:2},
+  {name:'Lena',    role:'Design Systems',      location:'Kreuzberg',   pub:'Hopfenreich', city:'Berlin',    country:'DE', flag:'\ud83c\udde9\ud83c\uddea', who:'Creator',      scene:'Open Table', clrIdx:0},
+  {name:'Tom',     role:'Platform Eng',        location:'Shoreditch',  pub:'BrewDog',     city:'London',    country:'GB', flag:'\ud83c\uddec\ud83c\udde7', who:'Employee',     scene:'Technology', clrIdx:6},
+  {name:'Wei',     role:'Growth PM',           location:'Clarke Quay', pub:'LeVeL33',     city:'Singapore', country:'SG', flag:'\ud83c\uddf8\ud83c\uddec', who:'Employee',     scene:'Business',   clrIdx:7},
+  {name:'Sofia',   role:'Climate Founder',     location:'Palermo',     pub:'Bar Ruca',    city:'Buenos Aires', country:'AR', flag:'\ud83c\udde6\ud83c\uddf7', who:'Entrepreneur', scene:'Business', clrIdx:8},
+  {name:'Noah',    role:'ML Researcher',       location:'Mile End',    pub:'Dieu du Ciel',city:'Montreal',  country:'CA', flag:'\ud83c\udde8\ud83c\udde6', who:'Student',      scene:'Technology', clrIdx:1},
+  {name:'Amara',   role:'Community Lead',      location:'Yaba',        pub:'Bature Brew', city:'Lagos',     country:'NG', flag:'\ud83c\uddf3\ud83c\uddec', who:'Creator',      scene:'Music',      clrIdx:4},
+  {name:'Mia',     role:'Ops Consultant',      location:'Surry Hills', pub:'Wayward',     city:'Sydney',    country:'AU', flag:'\ud83c\udde6\ud83c\uddfa', who:'Freelancer',   scene:'Startups',   clrIdx:9}
 ];
 
 /* =====================================================
    BOOT SEQUENCE STEPS
 ===================================================== */
 const BOOT_DEF=[
-  {ic:'⚡',lbl:'HOTSPOT DETECTION',    sub:'Scanning for JOBZ.BAR SSID on local network...'},
-  {ic:'🛡',lbl:'VENUE VERIFICATION',   sub:'Confirming physical presence at TOIT Indiranagar...'},
-  {ic:'✓', lbl:'NODE COMPLIANCE',      sub:'Validating device integrity & session certificates...'},
-  {ic:'⬡', lbl:'SESSION LOCK ACTIVE', sub:'JOBZ.BAR kiosk mode launching, restricting OS layer...'},
-  {ic:'🔑',lbl:'PAYMENT GATEWAY',      sub:'Routing to secure UPI endpoint for ₹1001 entry bond...'},
-  {ic:'◈', lbl:'IDENTITY TOKEN GEN',  sub:'Encrypting your session identity token...'},
-  {ic:'⚙', lbl:'ROOM MODE ACTIVATION',sub:'Activating live room & networking environment...'},
-  {ic:'⊗', lbl:'PRIVACY LAYER',       sub:'Blocking data exfil; DPDP compliance active...'},
-  {ic:'⇌', lbl:'MESH TUNNEL',         sub:'Opening encrypted relay to JOBZ.BAR city grid...'},
-  {ic:'🤖',lbl:'AI RECAP ENGINE',      sub:'Provisioning Claude AI for your session summary...'},
-  {ic:'📋',lbl:'SESSION LOGGER',       sub:'Starting secure audit trail & MoM engine...'},
-  {ic:'🔓',lbl:'ENTRY GRANTED',        sub:'All systems operational. Welcome to TOIT tonight.'},
+  {ic:'\u26a1',lbl:'HOTSPOT DETECTED',  sub:'JOBZ.BAR SSID found \u00b7 TOIT Indiranagar \u00b7 signal strong'},
+  {ic:'\ud83d\udee1',lbl:'CAPTIVE PORTAL',   sub:'Venue verified \u00b7 secure session + DPDP privacy layer armed'},
+  {ic:'\ud83d\udd11',lbl:'ENTRY BOND',       sub:'Routing to UPI for the \u20b91001 bond \u00b7 100% back as bar credit'},
 ];
 
 let bootIdx=-1;
@@ -2180,8 +2187,8 @@ function advanceBoot(){
     setTimeout(()=>{snd.login();goto('s-hotspot');},350);
     return;
   }
-  // Step 4 = payment gate — redirect to hotspot
-  if(bootIdx===4){
+  // final step = payment gate — redirect to hotspot
+  if(bootIdx===2){
     updateBootProg();
     setTimeout(()=>{snd.login();goto('s-hotspot');},500);
     return;
@@ -2340,7 +2347,7 @@ function enterDash(){
   // Build connecting log
   const log=document.getElementById('conn-log');log.innerHTML='';
   // resume the boot sequence that paused at the payment gate, then enter the room
-  const remaining=BOOT_DEF.slice(5).map(s=>`${s.ic} ${s.lbl.toLowerCase()} · ${s.sub}`);
+  const remaining=['\u25c8 identity token encrypted','\u2699 room mode activated \u00b7 live grid joined','\ud83e\udd16 AI recap engine armed'];
   const connSteps=[
     ...remaining,
     'calibrating VIBGYOR spectrum...',
@@ -2844,14 +2851,8 @@ Return ONLY a valid JSON object with exactly these fields — no markdown, no ex
   "nextStep": one sentence recommended action,
   "valueExchange": one sentence describing the potential value both parties can exchange
 }`;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
-    const data=await res.json();
-    const raw=(data.content||[]).map(b=>b.text||'').join('').trim();
-    const clean=raw.replace(/```json|```/gi,'').trim();
-    const insight=JSON.parse(clean);
-    renderAIInsight(el,insight);
-  } catch(e){renderAIInsightFallback(el,realMsgs.length,isConnected);}
+  void prompt;
+  setTimeout(()=>{try{renderAIInsightFallback(el,realMsgs.length,isConnected);}catch(e){}},450);
 }
 
 function renderAIInsight(el,insight){
@@ -2963,5 +2964,600 @@ function flipChat(){
   };
 })();
 </script>
+<!-- ═══════════ JOBZ.BAR v2 OVERRIDE LAYER ═══════════ -->
+<style>
+/* ---------- 1. SCROLL + FRAMING ---------- */
+html,body{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+body{min-height:100svh}
+.screen{height:auto;min-height:100svh;overflow:visible}
+#s-dash{height:100svh;max-height:100svh;overflow:hidden}
+#s-dash .dash-body{min-height:0;padding-bottom:5.5rem}
+.boot-steps{max-height:none}
+#s-connect,#s-exit-seq{min-height:100svh;padding-bottom:2rem}
+.exit-steps,.conn-log{max-width:360px}
+#s-email{height:auto;overflow:visible}
+.email-page{min-height:auto;padding-bottom:3rem}
+.body-pad{padding-bottom:2rem}
+
+/* ---------- 2. DESKTOP MODE ---------- */
+.view-toggle{
+  position:fixed;top:8px;right:8px;z-index:900;
+  font-family:var(--fm);font-size:.52rem;letter-spacing:1.5px;
+  background:rgba(8,8,22,0.9);border:1px solid rgba(212,175,55,0.35);color:var(--pk2);
+  padding:.3rem .6rem;border-radius:20px;cursor:pointer;backdrop-filter:blur(20px);
+}
+.view-toggle:hover{background:rgba(212,175,55,0.15)}
+body.desk .screen{max-width:1180px}
+body.desk .chat-tray{max-width:1180px}
+body.desk .notif-wrap{max-width:900px}
+body.desk .edge-ind{left:calc(50% - 590px)}
+body.desk .scan-hero{padding:3rem}
+body.desk .scan-big{font-size:4.2rem}
+body.desk .stat-trio{max-width:640px}
+body.desk .hotspot-strip{max-width:640px}
+body.desk .scan-footer,body.desk .boot-foot{max-width:640px;margin:0 auto;width:100%}
+body.desk .body-pad{max-width:720px;margin:0 auto;width:100%}
+body.desk .boot-steps{max-width:720px;margin:0 auto;width:100%}
+body.desk .dash-body{display:grid;grid-template-columns:1.35fr .85fr;gap:1.2rem;align-items:start}
+body.desk .dash-col-a{min-width:0}
+body.desk .dash-col-b{min-width:0;position:sticky;top:0}
+body.desk .member-list{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+body.desk .msg-wrap{max-width:62%}
+body.desk .email-outer{max-width:820px}
+@media (max-width:900px){ body.desk .dash-body{display:block} body.desk .member-list{display:flex} }
+
+/* ---------- 3. CHAT — readable terminal type ---------- */
+.chat-window{max-height:min(62vh,520px)}
+.bubble-them,.bubble-me{font-family:var(--fc);font-size:.8rem;line-height:1.7;letter-spacing:.1px;padding:.55rem .8rem}
+.bubble-me{color:#fff}
+.bubble-them{color:rgba(255,255,255,0.92)}
+.m-name-sm{font-family:var(--fc);font-size:.58rem;font-weight:700}
+.m-time-sm{font-family:var(--fc);font-size:.52rem}
+.chat-input-row .inp{font-family:var(--fc);font-size:.8rem;letter-spacing:.2px;padding:.5rem .85rem;color:#fff}
+.msg.sys{font-family:var(--fc);font-size:.58rem}
+.chat-msgs{padding:.75rem;gap:.5rem}
+.flip-btn{
+  background:rgba(255,255,255,0.05);border:1px solid var(--border2);
+  color:rgba(255,255,255,0.55);font-family:var(--fm);font-size:.5rem;letter-spacing:1.4px;
+  padding:0 .55rem;height:34px;border-radius:20px;cursor:pointer;flex-shrink:0;transition:all .2s;
+}
+.flip-btn:hover{border-color:rgba(212,175,55,0.45);color:var(--pk2)}
+.chat-window.plain .bubble-them{box-shadow:none}
+.chat-window.neon .bubble-them{box-shadow:0 0 14px -6px var(--nc,rgba(255,255,255,0.4))}
+.chat-window.neon .bubble-me{box-shadow:0 0 14px -6px rgba(212,175,55,0.7)}
+
+/* chat collapses in place — header stays put, never jumps away */
+.chat-window.minimised{max-height:none;overflow:hidden}
+.chat-window.minimised .chat-msgs,
+.chat-window.minimised .chat-input-row,
+.chat-window.minimised .chat-warn{display:none!important}
+.chat-header{cursor:pointer;user-select:none}
+.ch-actions{gap:.35rem}
+.ch-actions button{padding:.15rem .35rem}
+
+/* ---------- 4. LIVE NOTIFICATION CENTER ---------- */
+.live-badge{position:relative;cursor:pointer}
+.live-badge .lb-count{
+  position:absolute;top:-7px;right:-9px;min-width:15px;height:15px;padding:0 3px;
+  background:var(--clr-r);color:#fff;font-family:var(--fh);font-size:.42rem;
+  border-radius:20px;display:none;align-items:center;justify-content:center;
+  box-shadow:0 0 10px rgba(255,23,68,0.7);
+}
+.live-badge .lb-count.on{display:flex}
+.notif-panel{
+  position:fixed;top:52px;left:50%;transform:translateX(-50%) translateY(-8px);
+  width:calc(100% - 20px);max-width:460px;max-height:64vh;overflow-y:auto;z-index:560;
+  background:rgba(10,10,24,0.96);border:1px solid rgba(212,175,55,0.25);border-radius:14px;
+  backdrop-filter:blur(30px);box-shadow:0 20px 60px rgba(0,0,0,0.7);
+  padding:.6rem;display:none;opacity:0;transition:opacity .25s,transform .25s;
+}
+body.desk .notif-panel{max-width:640px}
+.notif-panel.show{display:block;opacity:1;transform:translateX(-50%) translateY(0)}
+.np-hd{display:flex;align-items:center;justify-content:space-between;padding:.25rem .5rem .6rem;border-bottom:1px solid var(--border2);margin-bottom:.5rem}
+.np-title{font-family:var(--fh);font-size:.55rem;letter-spacing:2px;color:#fff}
+.np-clear{font-family:var(--fm);font-size:.5rem;color:rgba(255,255,255,0.35);cursor:pointer;border:1px solid var(--border2);border-radius:20px;padding:.15rem .5rem}
+.np-item{
+  display:flex;gap:.6rem;align-items:flex-start;padding:.55rem .65rem;border-radius:10px;margin-bottom:.35rem;
+  border:1px solid;background:rgba(255,255,255,0.02);
+}
+.np-ic{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.np-txt{flex:1;font-family:var(--fc);font-size:.66rem;line-height:1.5}
+.np-meta{font-family:var(--fm);font-size:.46rem;letter-spacing:1px;opacity:.6;margin-top:.2rem}
+.np-empty{font-family:var(--fm);font-size:.6rem;color:rgba(255,255,255,0.25);text-align:center;padding:1.2rem}
+
+/* coloured translucent toast */
+.notif{border-width:1px}
+
+/* ---------- 5. MODALS (stats / filters / confirm) ---------- */
+.jb-modal{position:fixed;inset:0;z-index:620;background:rgba(2,2,10,0.82);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:1.1rem}
+.jb-modal.show{display:flex}
+.jb-card{
+  width:100%;max-width:420px;max-height:86vh;overflow-y:auto;
+  background:rgba(10,10,24,0.98);border:1px solid rgba(212,175,55,0.25);border-radius:16px;
+  padding:1.1rem;box-shadow:0 30px 80px rgba(0,0,0,0.8);
+}
+body.desk .jb-card{max-width:560px}
+.jb-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+.jb-title{font-family:var(--fh);font-size:.62rem;letter-spacing:2px;color:#fff}
+.jb-x{background:none;border:none;color:rgba(255,255,255,0.35);font-size:.9rem;cursor:pointer}
+.jb-x:hover{color:#fff}
+.jb-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.85rem}
+.jb-kpi{border:1px solid var(--border2);border-radius:12px;padding:.7rem;background:rgba(255,255,255,0.025)}
+.jb-kpi .k{font-family:var(--fh);font-size:1.2rem}
+.jb-kpi .l{font-family:var(--fm);font-size:.46rem;letter-spacing:1.5px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-top:.15rem}
+.jb-sec{font-family:var(--fm);font-size:.5rem;letter-spacing:2px;color:rgba(255,255,255,0.35);text-transform:uppercase;margin:.9rem 0 .5rem}
+.jb-bar-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem}
+.jb-bar-lbl{font-family:var(--fc);font-size:.6rem;color:rgba(255,255,255,0.6);width:112px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jb-bar-track{flex:1;height:7px;border-radius:20px;background:rgba(255,255,255,0.05);overflow:hidden}
+.jb-bar-fill{height:100%;border-radius:20px;transition:width .8s ease}
+.jb-bar-val{font-family:var(--fh);font-size:.55rem;color:rgba(255,255,255,0.7);width:30px;text-align:right}
+.jb-opt{
+  width:100%;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border2);border-radius:12px;
+  padding:.7rem .85rem;margin-bottom:.45rem;cursor:pointer;transition:all .2s;
+  font-family:var(--fc);font-size:.72rem;color:rgba(255,255,255,0.7);
+}
+.jb-opt:hover{border-color:rgba(212,175,55,0.4);color:#fff}
+.jb-opt.on{background:rgba(212,175,55,0.1);border-color:rgba(212,175,55,0.5);color:var(--pk2)}
+.jb-opt .cnt{font-family:var(--fh);font-size:.6rem;opacity:.7}
+.jb-note{font-family:var(--fm);font-size:.54rem;color:rgba(255,255,255,0.25);line-height:1.6;margin-top:.5rem}
+.cr-btn.on{background:rgba(212,175,55,0.14);border-color:rgba(212,175,55,0.5);color:var(--pk2)}
+
+/* ---------- 6. EMAIL RECAP — dark, legible, paginated ---------- */
+#s-email .email-page{background:#05060f}
+#s-email .email-sent-row{color:rgba(255,255,255,0.45)}
+#s-email .email-card{background:#0b0b1b;border:1px solid rgba(212,175,55,0.2);font-family:var(--fc);color:rgba(255,255,255,0.85)}
+#s-email .em-header{background:#07070f;border-bottom:1px solid rgba(212,175,55,0.15)}
+#s-email .em-meta-strip{background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.07)}
+#s-email .em-to-line{color:rgba(255,255,255,0.35)}
+#s-email .em-to-line span{color:var(--pk2)}
+#s-email .em-subject{color:#fff}
+#s-email .em-greeting{color:rgba(255,255,255,0.78);font-family:var(--fc);font-size:.78rem;line-height:1.85}
+#s-email .em-greeting strong{color:var(--pk2)}
+#s-email .em-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+#s-email .em-stat{background:rgba(255,255,255,0.04);border:1px solid var(--border2);min-width:0;overflow:hidden}
+#s-email .em-stat .esn{color:#fff;font-size:.68rem;line-height:1.25;word-break:break-word;overflow-wrap:anywhere}
+#s-email .em-stat.pink .esn{color:var(--pk2);font-size:1.05rem}
+#s-email .em-stat .esl{color:rgba(255,255,255,0.3)}
+#s-email .em-wallet{background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.22)}
+#s-email .em-wallet-label,#s-email .em-wallet-val{color:var(--clr-g)}
+#s-email .em-divider{background:rgba(255,255,255,0.08)}
+#s-email .em-mom-hd{color:rgba(255,255,255,0.5)}
+#s-email .em-mom-sub{color:rgba(255,255,255,0.32)}
+#s-email .em-convo{
+  border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.02);
+  margin-bottom:1.6rem;break-inside:avoid;page-break-inside:avoid;
+}
+#s-email .em-convo + .em-convo{border-top:2px solid rgba(212,175,55,0.25)}
+#s-email .em-convo-hd{background:rgba(255,255,255,0.035);border-bottom:1px solid rgba(255,255,255,0.08)}
+#s-email .em-convo-num{color:var(--pk2)}
+#s-email .em-convo-name{color:#fff;font-family:var(--fc);font-size:.82rem}
+#s-email .em-convo-role{color:rgba(255,255,255,0.42)}
+#s-email .em-convo-meta-line{color:rgba(255,255,255,0.32)}
+#s-email .em-transcript{background:transparent;gap:.6rem;padding:1rem}
+#s-email .em-msg-row{font-family:var(--fc);font-size:.72rem;line-height:1.7}
+#s-email .em-msg-row .bubble{color:rgba(255,255,255,0.82);font-family:var(--fc)}
+#s-email .em-msg-row.row-them .spk{color:var(--clr-b)}
+#s-email .em-msg-row.row-me .spk{color:var(--pk2)}
+#s-email .em-summary-box{background:rgba(0,162,255,0.05);border-top:1px solid rgba(0,162,255,0.15)}
+#s-email .em-summary-label{color:var(--clr-b)}
+#s-email .em-summary-text{color:rgba(255,255,255,0.72);font-family:var(--fc);font-size:.72rem}
+#s-email .em-no-convos{color:rgba(255,255,255,0.4)}
+#s-email .em-footer-legal{color:rgba(255,255,255,0.3)}
+#s-email .em-sign{color:rgba(255,255,255,0.6);font-family:var(--fc);font-size:.72rem;line-height:1.7;padding-top:.5rem}
+#s-email .em-sign strong{color:#fff}
+#s-email .em-sign .brand{display:block;margin-top:.4rem;font-family:var(--fm);font-size:.5rem;color:rgba(255,255,255,0.25);letter-spacing:1px}
+#s-email .ai-insight{background:rgba(157,0,255,0.05);border-top:1px solid rgba(157,0,255,0.18);padding:.85rem 1rem}
+#s-email .ai-insight-label{font-family:var(--fm);font-size:.5rem;letter-spacing:1.5px;color:var(--clr-v);text-transform:uppercase;margin-bottom:.5rem}
+#s-email .ai-metric-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem}
+#s-email .ai-metric{background:rgba(255,255,255,0.03);border:1px solid var(--border2);border-radius:8px;padding:.55rem}
+#s-email .am-label{font-family:var(--fm);font-size:.46rem;letter-spacing:1px;color:rgba(255,255,255,0.3);text-transform:uppercase}
+#s-email .am-val{font-family:var(--fh);font-size:.8rem;color:#fff;margin-top:.2rem}
+#s-email .am-val.green{color:var(--clr-g)}
+#s-email .ai-next-step,#s-email .ai-value-ex{margin-top:.5rem}
+#s-email .ans-label,#s-email .ave-label{font-family:var(--fm);font-size:.46rem;letter-spacing:1px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:.2rem}
+#s-email .ans-text,#s-email .ave-text{font-family:var(--fc);font-size:.7rem;line-height:1.65;color:rgba(255,255,255,0.75)}
+#s-email .new-session-btn{margin-top:1.5rem}
+.convo-break{
+  display:flex;align-items:center;gap:.6rem;margin:1.4rem 0 .9rem;
+  font-family:var(--fm);font-size:.48rem;letter-spacing:2px;color:rgba(255,255,255,0.22);
+}
+.convo-break::before,.convo-break::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
+@media print{
+  #s-email .em-convo{page-break-after:always}
+  .view-toggle,.new-session-btn,.chat-tray,.orbs{display:none!important}
+}
+</style>
+
+<!-- injected surfaces -->
+<button class="view-toggle" id="viewToggle" onclick="toggleView()">🖥 DESKTOP</button>
+
+<div class="notif-panel" id="notifPanel">
+  <div class="np-hd">
+    <div class="np-title">◈ LIVE ACTIVITY</div>
+    <div style="display:flex;gap:.4rem">
+      <div class="np-clear" onclick="clearNotifHistory()">clear</div>
+      <div class="np-clear" onclick="toggleNotifPanel(false)">close</div>
+    </div>
+  </div>
+  <div id="npList"><div class="np-empty">no signals yet · the room is warming up</div></div>
+</div>
+
+<div class="jb-modal" id="statsModal" onclick="if(event.target===this)closeStatsModal()">
+  <div class="jb-card" id="statsCard"></div>
+</div>
+
+<div class="jb-modal" id="filterModal" onclick="if(event.target===this)closeFilterModal()">
+  <div class="jb-card" id="filterCard"></div>
+</div>
+
+<div class="jb-modal" id="confirmModal">
+  <div class="jb-card" style="max-width:340px;text-align:center">
+    <div style="font-size:1.6rem;margin-bottom:.5rem">🔌</div>
+    <div class="jb-title" style="margin-bottom:.5rem" id="cfTitle">close this connection?</div>
+    <div class="jb-note" id="cfBody" style="margin-bottom:1.1rem">you’ll drop the chat window. the connection stays in your night recap.</div>
+    <div style="display:flex;gap:.6rem">
+      <button class="jb-opt" style="justify-content:center;margin:0" onclick="resolveConfirm(false)">keep it open</button>
+      <button class="jb-opt on" style="justify-content:center;margin:0" onclick="resolveConfirm(true)">yes, close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════ JOBZ.BAR v2 LOGIC LAYER ═══════════ */
+(function(){
+'use strict';
+window.addEventListener('error',function(e){console.warn('[jobz] caught',e.message);});
+
+/* ---------- desktop / mobile ---------- */
+window.toggleView=function(){
+  var desk=document.body.classList.toggle('desk');
+  try{localStorage.setItem('jobz-view',desk?'desk':'mob');}catch(e){}
+  document.getElementById('viewToggle').textContent=desk?'📱 MOBILE':'🖥 DESKTOP';
+  if(typeof renderMembers==='function'&&S.members&&S.members.length)renderMembers();
+};
+try{
+  var pref=localStorage.getItem('jobz-view');
+  if(pref==='desk'||(!pref&&window.innerWidth>=1100)){
+    document.body.classList.add('desk');
+    document.getElementById('viewToggle').textContent='📱 MOBILE';
+  }
+}catch(e){}
+
+/* ---------- desktop dashboard split ---------- */
+function ensureDashColumns(){
+  var body=document.getElementById('hud-dash-body');
+  if(!body||body.querySelector('.dash-col-a'))return;
+  var kids=Array.prototype.slice.call(body.children);
+  var a=document.createElement('div');a.className='dash-col-a';
+  var b=document.createElement('div');b.className='dash-col-b';
+  kids.forEach(function(k){
+    if(k.classList.contains('wallet-strip')||k.classList.contains('topic-pill')||k.id==='feed-list'||k.dataset.feedHd==='1')b.appendChild(k);
+    else a.appendChild(k);
+  });
+  body.appendChild(a);body.appendChild(b);
+}
+(function tagFeedHeading(){
+  var hds=document.querySelectorAll('#hud-dash-body .sec-hd');
+  if(hds.length>1)hds[1].dataset.feedHd='1';
+})();
+
+/* ---------- state additions ---------- */
+S.filterMode='all';
+S.sameVibe=false;
+S.notifHistory=[];
+S.notifUnread=0;
+
+/* ---------- rotating header roster (latest first) ---------- */
+var ROSTER=[];
+function seedRoster(){
+  ROSTER=SEEDS.slice(0,10).map(function(m){return {name:m.name,hex:VIBGYOR[m.clrIdx].hex};});
+}
+seedRoster();
+window.buildNodeBar=function(containerId){
+  var el=document.getElementById(containerId);if(!el)return;
+  el.innerHTML=ROSTER.slice(0,14).map(function(m,i){
+    return '<div class="ntag" style="background:rgba('+h2r(m.hex)+',0.07);border-color:rgba('+h2r(m.hex)+',0.3);color:'+m.hex+'">'+
+      '<div class="ndot" style="background:'+m.hex+'"></div>'+m.name+(i===0?' <span style="opacity:.55">· just in</span>':'')+'</div>';
+  }).join('');
+};
+var NEW_JOINERS=['Aditi','Rahul','Farhan','Meera','Zoya','Karthik','Ishan','Tara','Nikhil','Riya','Arjun','Leila','Dmitri','Hana','Pablo','Chen','Amelia','Kofi'];
+setInterval(function(){
+  var name=NEW_JOINERS[Math.floor(Math.random()*NEW_JOINERS.length)];
+  var hex=VIBGYOR[Math.floor(Math.random()*VIBGYOR.length)].hex;
+  ROSTER.unshift({name:name,hex:hex});
+  if(ROSTER.length>18)ROSTER.pop();
+  buildNodeBar('node-bar-scan');
+  if(!document.getElementById('s-dash').classList.contains('hidden')){
+    buildNodeBar('node-bar-dash');
+  }
+},6500);
+
+/* ---------- LIVE badge + notification centre ---------- */
+function liveBadge(){return document.querySelector('#s-dash .sb-mode-badge.active');}
+(function initBadge(){
+  var b=liveBadge();if(!b)return;
+  b.classList.add('live-badge');
+  b.innerHTML='LIVE <span class="lb-count" id="lbCount">0</span>';
+  b.onclick=function(){toggleNotifPanel();};
+})();
+window.toggleNotifPanel=function(force){
+  var p=document.getElementById('notifPanel');
+  var show=(force===undefined)?!p.classList.contains('show'):force;
+  p.classList.toggle('show',show);
+  if(show){S.notifUnread=0;paintBadge();renderNotifHistory();}
+};
+function paintBadge(){
+  var c=document.getElementById('lbCount');if(!c)return;
+  c.textContent=S.notifUnread>99?'99+':S.notifUnread;
+  c.classList.toggle('on',S.notifUnread>0);
+}
+function renderNotifHistory(){
+  var list=document.getElementById('npList');
+  if(!S.notifHistory.length){list.innerHTML='<div class="np-empty">no signals yet · the room is warming up</div>';return;}
+  list.innerHTML=S.notifHistory.map(function(n){
+    var rgb=h2r(n.bg);
+    return '<div class="np-item" style="background:rgba('+rgb+',0.09);border-color:rgba('+rgb+',0.32)">'+
+      '<div class="np-ic" style="background:rgba('+rgb+',0.18);color:'+n.bg+'">'+n.icon+'</div>'+
+      '<div style="flex:1;min-width:0"><div class="np-txt" style="color:'+n.bg+'">'+n.txt+'</div>'+
+      '<div class="np-meta" style="color:'+n.bg+'">'+n.app+' · '+n.time+'</div></div></div>';
+  }).join('');
+}
+window.clearNotifHistory=function(){S.notifHistory=[];S.notifUnread=0;paintBadge();renderNotifHistory();};
+
+var origShowNotif=window.showNotif;
+window.showNotif=function(icon,app,txt,bg){
+  bg=bg||'#D4AF37';
+  var d=new Date();
+  S.notifHistory.unshift({icon:icon,app:app,txt:txt,bg:bg,time:fmtTime(d)});
+  if(S.notifHistory.length>40)S.notifHistory.pop();
+  S.notifUnread++;paintBadge();
+  if(document.getElementById('notifPanel').classList.contains('show')){S.notifUnread=0;paintBadge();renderNotifHistory();}
+  try{
+    var wrap=document.getElementById('notifWrap');
+    var card=wrap.querySelector('.notif');
+    card.style.background='linear-gradient(135deg,rgba('+h2r(bg)+',0.22),rgba(10,10,24,0.94))';
+    card.style.borderColor='rgba('+h2r(bg)+',0.45)';
+    card.style.boxShadow='0 12px 40px rgba(0,0,0,0.6),0 0 30px -12px '+bg;
+    document.getElementById('nTxt').style.color='#fff';
+  }catch(e){}
+  origShowNotif(icon,app,txt,bg);
+};
+
+/* global city notifications */
+var GLOBAL_NOTIFS=[
+  {app:'DUBAI GRID',icon:'🌍',bg:'#ffe600',txt:'Aisha opened a fintech table at Lock Stock, DIFC 🇦🇪'},
+  {app:'SF GRID',icon:'💸',bg:'#00e676',txt:'Marcus is taking seed pitches at Zeitgeist, SoMa 🇺🇸'},
+  {app:'TOKYO GRID',icon:'🤖',bg:'#00a2ff',txt:'Yuki demoing robotics stack at Craft Beer Market 🇯🇵'},
+  {app:'BERLIN GRID',icon:'🎨',bg:'#ff00cc',txt:'Lena hosting a design systems table at Hopfenreich 🇩🇪'},
+  {app:'LONDON GRID',icon:'⚡',bg:'#9d00ff',txt:'Tom live from BrewDog Shoreditch · platform eng room 🇬🇧'},
+  {app:'SINGAPORE GRID',icon:'📈',bg:'#00ffea',txt:'Wei just crossed 5 connects at LeVeL33 🇸🇬'},
+  {app:'BUENOS AIRES',icon:'🌱',bg:'#00e676',txt:'Sofia pitching climate tech at Bar Ruca, Palermo 🇦🇷'},
+  {app:'MONTREAL GRID',icon:'🧪',bg:'#5500cc',txt:'Noah sharing ML research at Dieu du Ciel 🇨🇦'},
+  {app:'LAGOS GRID',icon:'🎵',bg:'#ff6200',txt:'Amara running a creator table at Bature Brew 🇳🇬'},
+  {app:'SYDNEY GRID',icon:'🤝',bg:'#ff1744',txt:'Mia matched with 2 founders at Wayward, Surry Hills 🇦🇺'},
+  {app:'CITY GRID',icon:'🍻',bg:'#D4AF37',txt:'10 Bengaluru venues live · TOIT, TAG, Pecos, Arbor + 6 more'},
+  {app:'JOBZ.BAR',icon:'🔥',bg:'#ff1744',txt:'Open Table starting in 5 mins · Rohan is hosting at Geist'}
+];
+if(typeof VENUE_NOTIFS!=='undefined'){GLOBAL_NOTIFS.forEach(function(n){VENUE_NOTIFS.push(n);});nQueue=VENUE_NOTIFS.slice();}
+window.startVenueNotifs=function(){
+  setTimeout(function(){showNotifFromQueue();},6000);
+  setInterval(function(){if(!nActive)showNotifFromQueue();},14000);
+};
+
+/* ---------- MEMBER RENDER with filters ---------- */
+var MY_PUB='TOIT',MY_CITY='Bengaluru';
+function visibleMembers(){
+  return (S.members||[]).filter(function(m){
+    if(S.filterMode==='bar'&&m.pub!==MY_PUB)return false;
+    if(S.filterMode==='city'&&m.city!==MY_CITY)return false;
+    if(S.filterMode==='global'&&m.city===MY_CITY)return false;
+    if(S.sameVibe&&String(m.scene).toUpperCase()!==String(S.scene).toUpperCase())return false;
+    return true;
+  });
+}
+window.renderMembers=function(){
+  ensureDashColumns();
+  var list=document.getElementById('member-list');if(!list)return;
+  list.innerHTML='';
+  var rows=visibleMembers();
+  if(!rows.length){
+    list.innerHTML='<div style="font-family:var(--fc);font-size:.7rem;color:rgba(255,255,255,0.3);padding:1rem;text-align:center;border:1px dashed rgba(255,255,255,0.1);border-radius:10px">no nodes match this filter yet · try SAME CITY or GLOBAL</div>';
+    return;
+  }
+  rows.forEach(function(m){
+    var same=String(m.scene).toUpperCase()===String(S.scene).toUpperCase();
+    var pinned=m.scene==='Open Table';
+    var hex=m.hex,rgb=h2r(hex);
+    var card=document.createElement('div');
+    card.className='member-card '+(pinned?'pinned':'');
+    card.id='mc-'+m.id;
+    card.style.borderColor='rgba('+rgb+',0.25)';
+    card.innerHTML=
+      '<div class="av" style="background:rgba('+rgb+',0.1);color:'+hex+';border:1px solid rgba('+rgb+',0.35)">'+m.initials+'</div>'+
+      '<div class="minfo">'+
+        '<div class="mname">'+m.name+' <span style="font-size:.46rem;font-weight:normal;color:rgba(255,255,255,0.28)">'+(m.flag||'')+' '+m.location+'</span></div>'+
+        '<div class="mrole">'+m.role+'</div>'+
+        '<div class="mnode" style="background:rgba('+rgb+',0.07);border-color:rgba('+rgb+',0.25);color:'+hex+'"><div class="ndot-sm" style="background:'+hex+'"></div>'+m.who+'</div>'+
+        '<div class="mmeta">'+
+          '<span class="chip ch-pk">'+m.pub+'</span>'+
+          '<span class="chip '+(m.city===MY_CITY?'ch-cy':'ch-pu')+'">'+m.city+'</span>'+
+          '<span class="chip '+(pinned?'ch-pu':same?'ch-gr':'ch-cy')+'">'+(pinned?'🪑 open table':same?'✦ same vibe':m.scene)+'</span>'+
+        '</div>'+
+      '</div>'+
+      '<button class="conn-btn'+(m.connected?' done':'')+'" onclick="openChat('+m.id+')" id="cb-'+m.id+'" style="border-color:rgba('+rgb+',0.35);color:'+(m.connected?'var(--clr-g)':hex)+'">'+(m.connected?'connected ✓':'tap in')+'</button>';
+    list.appendChild(card);
+  });
+};
+
+/* ---------- SAME VIBE ---------- */
+window.toggleSameVibe=function(){
+  S.sameVibe=!S.sameVibe;
+  var b=document.getElementById('vibe-btn');
+  if(b){b.classList.toggle('on',S.sameVibe);b.textContent=S.sameVibe?'◉ SAME VIBE · ON':'◎ SAME VIBE';}
+  renderMembers();
+  var n=visibleMembers().length;
+  addFeed(S.sameVibe
+    ? '◉ same vibe filter ON · showing <b>'+n+'</b> node'+(n===1?'':'s')+' on <b>'+S.scene+'</b>'
+    : '◎ same vibe filter OFF · full room restored');
+  try{snd.ping();}catch(e){}
+};
+
+/* ---------- STATS MODAL ---------- */
+var CITY_POOL=[
+  {city:'Bengaluru',flag:'🇮🇳',hex:'#D4AF37'},{city:'Mumbai',flag:'🇮🇳',hex:'#ff6200'},
+  {city:'Delhi NCR',flag:'🇮🇳',hex:'#ffe600'},{city:'Hyderabad',flag:'🇮🇳',hex:'#00e676'},
+  {city:'Dubai',flag:'🇦🇪',hex:'#00ffea'},{city:'Singapore',flag:'🇸🇬',hex:'#00a2ff'},
+  {city:'London',flag:'🇬🇧',hex:'#9d00ff'},{city:'San Francisco',flag:'🇺🇸',hex:'#ff00cc'},
+  {city:'Tokyo',flag:'🇯🇵',hex:'#ff1744'},{city:'Berlin',flag:'🇩🇪',hex:'#5500cc'}
+];
+var CITY_LIVE=[0,0,0,0,0,0,0,0,0,0].map(function(_,i){return Math.round(120/(i+1.15))+Math.floor(Math.random()*18);});
+setInterval(function(){CITY_LIVE=CITY_LIVE.map(function(v){return Math.max(6,v+(Math.random()<0.5?-1:1)*Math.floor(Math.random()*4));});},5000);
+window.openStatsModal=function(){
+  var total=CITY_LIVE.reduce(function(a,b){return a+b;},0);
+  var max=Math.max.apply(null,CITY_LIVE);
+  var venues=10,countries=10;
+  var personas=[['Founders','#D4AF37',34],['Employees','#00a2ff',28],['Investors','#00e676',14],['Creators','#ff00cc',12],['Students','#ffe600',12]];
+  var rows=CITY_POOL.map(function(c,i){
+    return '<div class="jb-bar-row"><div class="jb-bar-lbl">'+c.flag+' '+c.city+'</div>'+
+      '<div class="jb-bar-track"><div class="jb-bar-fill" style="width:'+Math.round(CITY_LIVE[i]/max*100)+'%;background:linear-gradient(90deg,'+c.hex+'88,'+c.hex+')"></div></div>'+
+      '<div class="jb-bar-val">'+CITY_LIVE[i]+'</div></div>';
+  }).join('');
+  var pRows=personas.map(function(p){
+    return '<div class="jb-bar-row"><div class="jb-bar-lbl">'+p[0]+'</div>'+
+      '<div class="jb-bar-track"><div class="jb-bar-fill" style="width:'+p[2]+'%;background:linear-gradient(90deg,'+p[1]+'88,'+p[1]+')"></div></div>'+
+      '<div class="jb-bar-val">'+p[2]+'%</div></div>';
+  }).join('');
+  document.getElementById('statsCard').innerHTML=
+    '<div class="jb-hd"><div class="jb-title">◈ JOBZ.BAR · LIVE PLATFORM STATS</div><button class="jb-x" onclick="closeStatsModal()">✕</button></div>'+
+    '<div class="jb-grid">'+
+      '<div class="jb-kpi"><div class="k" style="color:var(--pk2)">'+total+'</div><div class="l">online now</div></div>'+
+      '<div class="jb-kpi"><div class="k" style="color:var(--clr-g)">'+venues+'</div><div class="l">venues in BLR</div></div>'+
+      '<div class="jb-kpi"><div class="k" style="color:var(--clr-b)">'+countries+'</div><div class="l">countries live</div></div>'+
+      '<div class="jb-kpi"><div class="k" style="color:var(--clr-p)">'+(S.connections||0)+'</div><div class="l">your connects</div></div>'+
+    '</div>'+
+    '<div class="jb-sec">city breakdown · nodes online</div>'+rows+
+    '<div class="jb-sec">persona mix across the grid</div>'+pRows+
+    '<div class="jb-sec">tonight at TOIT · indiranagar</div>'+
+    '<div class="jb-grid">'+
+      '<div class="jb-kpi"><div class="k" style="color:#fff">'+(S.members||[]).filter(function(m){return m.pub===MY_PUB;}).length+'</div><div class="l">nodes in this bar</div></div>'+
+      '<div class="jb-kpi"><div class="k" style="color:#fff">₹'+(S.walletBalance||1001)+'</div><div class="l">your bar credit</div></div>'+
+    '</div>'+
+    '<div class="jb-note">numbers refresh live off the city grid · anonymised under DPDP 2023 · no personal data leaves your session.</div>';
+  document.getElementById('statsModal').classList.add('show');
+  try{snd.ping();}catch(e){}
+};
+window.closeStatsModal=function(){document.getElementById('statsModal').classList.remove('show');};
+
+/* ---------- FILTER MODAL (was PING) ---------- */
+var FILTERS=[
+  {id:'all',label:'🌐 EVERYONE ON THE GRID',note:'every node live right now'},
+  {id:'bar',label:'🍺 SAME BAR · TOIT',note:'people physically in this venue'},
+  {id:'city',label:'📍 SAME CITY · BENGALURU',note:'10 venues across the city grid'},
+  {id:'global',label:'✈️ GLOBAL ROOMS',note:'10 countries cross-linked tonight'}
+];
+function filterCount(id){
+  var save=S.filterMode;S.filterMode=id;var n=visibleMembers().length;S.filterMode=save;return n;
+}
+window.openFilterModal=function(){
+  document.getElementById('filterCard').innerHTML=
+    '<div class="jb-hd"><div class="jb-title">⚙ ROOM FILTERS</div><button class="jb-x" onclick="closeFilterModal()">✕</button></div>'+
+    FILTERS.map(function(f){
+      return '<button class="jb-opt '+(S.filterMode===f.id?'on':'')+'" onclick="applyFilter(\''+f.id+'\')">'+
+        '<span>'+f.label+'<span style="display:block;font-family:var(--fm);font-size:.5rem;opacity:.55;margin-top:.2rem">'+f.note+'</span></span>'+
+        '<span class="cnt">'+filterCount(f.id)+'</span></button>';
+    }).join('')+
+    '<div class="jb-note">filters run live against the mesh · switching is instant, nobody gets notified.</div>';
+  document.getElementById('filterModal').classList.add('show');
+  try{snd.key();}catch(e){}
+};
+window.closeFilterModal=function(){document.getElementById('filterModal').classList.remove('show');};
+window.applyFilter=function(id){
+  S.filterMode=id;
+  var f=FILTERS.filter(function(x){return x.id===id;})[0];
+  var b=document.getElementById('filter-btn');
+  if(b)b.textContent='⚙ '+(id==='all'?'FILTERS':id.toUpperCase());
+  renderMembers();closeFilterModal();
+  addFeed('⚙ filter set → <b>'+f.label.replace(/^[^ ]+ /,'')+'</b> · '+visibleMembers().length+' nodes');
+  try{snd.ping();}catch(e){}
+};
+
+/* ---------- CHAT: in-place collapse, confirm close, skin ---------- */
+window.minimiseTray=function(){
+  var w=document.getElementById('chat-window');
+  var min=w.classList.toggle('minimised');
+  var b=document.getElementById('ch-min-btn');
+  if(b)b.textContent=min?'▢':'—';
+  document.getElementById('chat-tray').classList.toggle('mini',min);
+};
+document.querySelector('#chat-window .chat-header').addEventListener('click',function(e){
+  if(e.target.closest('button'))return;
+  minimiseTray();
+});
+var confirmCb=null;
+window.askConfirm=function(title,body,cb){
+  document.getElementById('cfTitle').textContent=title;
+  document.getElementById('cfBody').textContent=body;
+  confirmCb=cb;
+  document.getElementById('confirmModal').classList.add('show');
+};
+window.resolveConfirm=function(yes){
+  document.getElementById('confirmModal').classList.remove('show');
+  var cb=confirmCb;confirmCb=null;
+  if(yes&&cb)cb();
+};
+var origCloseTray=window.closeTray;
+window.closeTray=function(){
+  var n=Object.keys(S.chats||{}).length;
+  askConfirm('close this connection?','are you sure you want to close '+(n>1?('all '+n+' open chats'):'this chat')+'? the conversation still lands in your night recap.',function(){
+    origCloseTray();
+  });
+};
+var origCloseChat=window.closeChat;
+window.closeChat=function(id){
+  var m=(S.members||[]).filter(function(x){return x.id==id;})[0];
+  askConfirm('close this connection?','are you sure you want to close the chat with '+(m?m.name:'this node')+'? it stays in your recap.',function(){
+    origCloseChat(id);
+  });
+};
+window.flipChat=function(){
+  var w=document.getElementById('chat-window');if(!w)return;
+  var neon=w.classList.toggle('neon');
+  w.classList.toggle('plain',!neon);
+  var b=document.getElementById('flip-btn');
+  if(b)b.textContent=neon?'NEON':'STD';
+  try{snd.key();}catch(e){}
+};
+
+/* ---------- richer feed seed ---------- */
+var origBuildFeed=window.buildFeed;
+window.buildFeed=function(){
+  origBuildFeed();
+  addFeed('🌍 city grid cross-linked with <b>10 countries</b> tonight');
+  addFeed('<b>Marcus</b> live from Zeitgeist, San Francisco 🇺🇸');
+  addFeed('<b>Aisha</b> opened a fintech table in Dubai 🇦🇪');
+};
+
+/* ---------- email recap: conversation separators ---------- */
+var origRecap=window.buildEmailRecap;
+window.buildEmailRecap=function(){
+  origRecap();
+  var c=document.getElementById('em-convos-container');
+  if(!c)return;
+  Array.prototype.slice.call(c.querySelectorAll('.em-convo')).forEach(function(el,i){
+    if(i===0)return;
+    var br=document.createElement('div');
+    br.className='convo-break';
+    br.innerHTML='<span>NEXT CONVERSATION</span>';
+    c.insertBefore(br,el);
+  });
+};
+
+/* first paint */
+buildNodeBar('node-bar-scan');
+paintBadge();
+})();
+</script>
+
 </body>
 </html>
